@@ -1,0 +1,9 @@
+BotSelfConfig:
+  host: "127.0.0.1"
+  port: 8765
+  debug: false
+  superusers: ["1037447217"]
+  nickname: ["凌", "ling", "lin"]
+  command_start: ["!"]
+  command_sep: ["."]
+  session_expire_timeout: 60
