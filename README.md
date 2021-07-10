@@ -1,7 +1,4 @@
 # Ling
 
-## How to start
+## 项目特色
 
-1. generate project using `nb create` .
-2. writing your plugins under `ling/plugins` folder.
-3. run your bot using `nb run` .
