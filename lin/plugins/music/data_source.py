@@ -45,7 +45,7 @@ class MusicParse:
     
     @property
     def content(self) -> dict or list or ...:
-        url = f"https://api.injahow.cn/meting/?type={'single' if self.tp == 'song' else 'playlist'}&id={self.id}"
+        url = f"http://api.takidelth.cn/meting/?type={'single' if self.tp == 'song' else 'playlist'}&id={self.id}"
         data = requests.get(url, headers=headers).json()
         if isinstance(data, dict):
             return data if not data.get("error", None) else None
