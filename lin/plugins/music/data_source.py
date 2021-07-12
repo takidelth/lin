@@ -8,16 +8,33 @@ headers = {
 }
 
 
-def get_type_and_id(string: str) -> tuple or None:
-    result = re.findall("(song|playlist).*?id=([0-9]+)", string)
-    return result[0] if result else None
-
-
 class MusicParse:
     """处理 Music 链接"""
     
+    API_ADDR: str = "http://api.takidelth.cn/meting/"
     lnk: str = ""
     flag: bool = False
+
+
+    @staticmethod
+    def get_type_and_id(string: str, server_type: str) -> Union[str, str] or None:
+        if server_type == "netease":
+            pattern = "(song|playlist).*?id=([0-9A-Z]+)"
+        elif server_type == "tencent":
+            pattern = "(songid|details).*?id=([0-9A-Z]+)"
+        result = re.findall(pattern, string)
+        return [
+            "song" if result[0][0] in ["song", "songid"] else "playlist",
+            result[0][1]
+        ] if result else None
+    
+    
+    @staticmethod
+    def get_server_type(link: str) -> str:
+        if "music.163.com" in link:
+            return "netease"
+        elif "y.qq.com" in link:
+            return "tencent"
 
 
     @property
@@ -27,10 +44,12 @@ class MusicParse:
     
     @link.setter
     def link(self, value: str) -> None:
-        result = get_type_and_id(value)
+        server_type = self.get_server_type(value)
+        result = self.get_type_and_id(value, server_type)
         if result:
             self.tp, self.id = result
             self.flag = True
+            self.server_type = server_type
 
 
     @property
@@ -42,22 +61,27 @@ class MusicParse:
     def get_id(self) -> str:
         return self.id
     
-    
+
+    def _generate_full_api_url(self, link_type: str, song_id: str) -> str:
+        return self.API_ADDR + f"?server={self.server_type}&type={self.tp}&id={song_id}"
+
+
     @property
     def content(self) -> dict or list or ...:
-        url = f"http://api.takidelth.cn/meting/?type={'single' if self.tp == 'song' else 'playlist'}&id={self.id}"
+        url = self._generate_full_api_url(self.tp, self.id)
         data = requests.get(url, headers=headers).json()
         if isinstance(data, dict):
             return data if not data.get("error", None) else None
         elif isinstance(data, list):
             return data if data != [] else None
     
-    def is_ok(self) -> bool:
+
+    @property
+    def ok(self) -> bool:
         return self.flag
 
 
-MusicParser = MusicParse()
-
 if __name__ == "__main__":
-    MusicParser.link = "https://api.injahow.cn/meting/?type=song&id=591321"
-    print(MusicParser.target_link)
+    MusicParser = MusicParse()
+    MusicParser.link = "https://i.y.qq.com/n2/m/share/details/taoge.html?platform=11&amp;appshare=android_qq&amp;appversion=10150009&amp;hosteuin=oKni7ivP7i-57z**&amp;id=2917966132&amp;ADTAG=qfshare"
+    print(MusicParser.content)
