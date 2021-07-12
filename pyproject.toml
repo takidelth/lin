@@ -2,7 +2,7 @@
 name = "lin"
 version = "0.1.0"
 description = "lin"
-authors = []
+authors = ["taki"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
