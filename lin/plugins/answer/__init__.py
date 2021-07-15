@@ -1,8 +1,9 @@
 from nonebot.adapters.cqhttp import Bot, Event
-from nonebot.adapters.cqhttp.event import Sender
 from nonebot.rule import to_me
 from nonebot.plugin import on_command
 import requests
+
+from lin.exceptions import ApiException
 
 answerUrl = "http://cx.icodef.com/wyn-nb?v=2"
 headers = {
@@ -39,6 +40,4 @@ async def first_handle(bot: Bot, event: Event):
             )
     else:
         await ans.finish("网络请求出错啦， 请稍后再试QAQ")    
-    # except:
-    #     await ans.finish("网络请求出错啦， 请稍后再试")
         

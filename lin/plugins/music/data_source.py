@@ -19,12 +19,12 @@ class MusicParse:
     @staticmethod
     def get_type_and_id(string: str, server_type: str) -> Union[str, str] or None:
         if server_type == "netease":
-            pattern = "(song|playlist).*?id=([0-9A-Z]+)"
+            pattern = "(song|playlist).*?id=([0-9]+)"
         elif server_type == "tencent":
-            pattern = "(songid|details).*?id=([0-9A-Z]+)"
+            pattern = "(songid|details).*?id=([0-9a-zA-Z]+)"
         result = re.findall(pattern, string)
         return [
-            "song" if result[0][0] in ["song", "songid"] else "playlist",
+            "single" if result[0][0] in ["song", "songid"] else "playlist",
             result[0][1]
         ] if result else None
     
@@ -52,8 +52,7 @@ class MusicParse:
             self.server_type = server_type
 
 
-    @property
-    def get_type(self) -> str:
+    def get_link_type(self) -> str:
         return self.tp
 
 
@@ -70,6 +69,7 @@ class MusicParse:
     def content(self) -> dict or list or ...:
         url = self._generate_full_api_url(self.tp, self.id)
         data = requests.get(url, headers=headers).json()
+        print(url)
         if isinstance(data, dict):
             return data if not data.get("error", None) else None
         elif isinstance(data, list):

@@ -2,7 +2,7 @@
 name = "lin"
 version = "0.1.0"
 description = "lin"
-authors = ["taki"]
+authors = ["taki <wh1037447217@outlook.com>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
@@ -14,7 +14,7 @@ nb-cli = "^0.1.0"
 nonebot-test = "^0.1.0"
 
 [nonebot.plugins]
-plugins = []
+plugins = ["nonebot-plugin-ipypreter"]
 plugin_dirs = ["lin/plugins"]
 
 [build-system]

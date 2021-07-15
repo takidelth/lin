@@ -1,9 +1,8 @@
 import nonebot
 from nonebot.adapters.cqhttp import Bot as LINGBot
-from nonebot.log import logger
 
 from .config import RUNTIME_CONFIG
-
+from .log import logger
 
 def asgi():
     return nonebot.get_asgi()
@@ -37,6 +36,7 @@ def init():
             　　█▊　　█▋
             　　 █▏　　█▙
 
+        不要停下来啊！（
 """)
 
 def run(app):

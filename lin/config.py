@@ -21,6 +21,12 @@ class BotSelfConfig:
     )
 
 
+class OtherPluginsConfig:
+    config: dict = config["OtherPluginsConfig"]
+    
+    plugin_ipypreter_image: str = config.get("your_docker_image_tag", "latest") 
+
+
 RUNTIME_CONFIG = {
     "host": BotSelfConfig.host,
     "port": BotSelfConfig.port,
@@ -29,5 +35,6 @@ RUNTIME_CONFIG = {
     "nickname": BotSelfConfig.nickname,
     "command_start": BotSelfConfig.command_start,
     "command_sep": BotSelfConfig.command_sep,
-    "session_expire_timeout": BotSelfConfig.session_expire_timeout
+    "session_expire_timeout": BotSelfConfig.session_expire_timeout,
+    "PLUGIN_IPYPRETER_IMAGE": OtherPluginsConfig.plugin_ipypreter_image
 }

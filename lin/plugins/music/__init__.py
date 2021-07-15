@@ -3,10 +3,11 @@ from nonebot.plugin import on_command
 from nonebot.adapters.cqhttp import Bot, MessageEvent
 from nonebot.adapters.cqhttp.message import MessageSegment, Message
 from nonebot.typing import T_State
-from nonebot.log import logger
 
 from .data_source import MusicParse
+from lin.log import logger
 from lin.utils import requests
+from lin.exceptions import ApiException
 
 
 music = on_command("music", aliases={"音乐", "音乐下载"}, priority=5)
@@ -65,4 +66,5 @@ async def _handle_event(bot: Bot, event: MessageEvent, state: T_State) -> None:
     elif MusicParser.get_link_type() == "playlist":
         await music.finish(f"主人还在摸鱼(疯狂暗示")
     else:
+        logger.error("API 请求返回数据失败")
         await music.finish(f"咦...好像失败了，这...这绝对不是我的问题！不信你换一个试试")
