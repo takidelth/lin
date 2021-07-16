@@ -1,6 +1,7 @@
 from nonebot.adapters.cqhttp import Bot, Event
-from nonebot.rule import to_me
-from nonebot.plugin import on_command
+
+from lin.rule import to_bot
+from lin.plugin import on_command
 import requests
 
 from lin.exceptions import ApiException
@@ -10,7 +11,14 @@ headers = {
     "user-agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.212 Safari/537.36",
 }
 
-ans = on_command("问", aliases={"答案", "ans", "题库"}, rule=to_me(), priority=5)
+__doc__ = """
+说明:
+  获取网课答案
+使用:
+  /ans <网课题目内容>
+"""
+
+ans = on_command("/ans",__doc__, rule=to_bot())
 
 @ans.handle()
 async def first_handle(bot: Bot, event: Event):

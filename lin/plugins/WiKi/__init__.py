@@ -2,7 +2,7 @@ import traceback
 from nonebot.adapters.cqhttp import Bot, MessageEvent
 from nonebot.adapters.cqhttp.message import Message
 from nonebot.rule import to_me
-from nonebot.plugin import on_command, on_message
+from lin.plugin import on_command, on_message
 from nonebot.typing import T_State
 from nonebot.permission import SUPERUSER
 from nonebot.adapters.mirai.message import MessageSegment

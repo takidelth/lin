@@ -1,7 +1,7 @@
 import traceback
 from nonebot.adapters.cqhttp import Bot, MessageEvent
 from nonebot.rule import to_me
-from nonebot.plugin import on_command, on_message
+from lin.plugin import on_command, on_message
 from nonebot.typing import T_State
 import re
 import requests

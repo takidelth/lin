@@ -10,6 +10,8 @@ stamp = on_notice(priority=5)
 words = [
     "戳我干嘛?", 
     "再戳我可生气了昂()", 
+    "你再戳你🐎呢？",
+    "给我适可而止啊喂!",
     "爬！",
     "[CQ:image,file=cdeb755a74bfdfacc99b54b2c8ce7bb0.image,url=https://gchat.qpic.cn/gchatpic_new/2929028892/483796300-2503789967-CDEB755A74BFDFACC99B54B2C8CE7BB0/0?term=3]"    
 ]

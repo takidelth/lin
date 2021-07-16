@@ -4,7 +4,7 @@ BotSelfConfig:
   debug: false
   superusers: ["1037447217"]
   nickname: ["凌", "ling", "lin"]
-  command_start: ["!"]
+  command_start: [""]
   command_sep: ["."]
   session_expire_timeout: 60
 OtherPluginsConfig:

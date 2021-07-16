@@ -1,16 +1,24 @@
-from nonebot.adapters.cqhttp import message
-from nonebot.plugin import on_command
+from lin.plugin import on_command
 from nonebot.adapters.cqhttp import Bot, MessageEvent
 from nonebot.adapters.cqhttp.message import MessageSegment, Message
 from nonebot.typing import T_State
 
 from .data_source import MusicParse
 from lin.log import logger
-from lin.utils import requests
-from lin.exceptions import ApiException
 
+__doc__ = """
+音乐解析插件:
+  目前支持网易和QQ音乐解析
+使用方式：
+  发送指令: music <你的音乐链接>
+或者
+  发送命令: music 后再向机器人分享你的链接
 
-music = on_command("music", aliases={"音乐", "音乐下载"}, priority=5)
+说明:
+  链接可以是 歌单 也可以是 单曲
+"""
+
+music = on_command("music", __doc__, aliases={"音乐", "音乐下载"})
 
 
 @music.args_parser
