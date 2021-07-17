@@ -2,9 +2,10 @@
     [√]TODO 权限 和 插件 的动态管理
     [√]TODO 重构 部分插件代码
     [ ]TODO 重写 Code Runner 插件
-    [-]TODO 整合 plugin 内部函数
+    [√]TODO 整合 plugin 内部函数
     [ ]TODO 添加 定时任务模块
     [ ]TODO 添加 hitokoto(一言) 插件
+    [ ]TODO 修改 music 插件 以正则触发
 """
 import shutil
 import nonebot
@@ -37,4 +38,3 @@ async def _startup() -> None:
     logger.info("正在加载 block_list...")
     _update_block_list(_load_block_list())
     logger.debug("block_list 加载完成")
-    
