@@ -30,10 +30,28 @@ async def get_content(url: str, headers: Optional[dict] = None):
     return result
 
 
-async def post_bytes(
-    url: str, params: Optional[dict] = None, json: Optional[dict] = None
+async def post_text(
+    url: str, headers: Optional[dict] = None, data: Optional[dict] = None
 ) -> bytes:
     async with ClientSession() as session:
-        async with session.post(url, params=params, json=json) as r:
+        async with session.post(url, headers=headers, data=data) as r:
+            result = await r.text()
+    return result
+
+
+async def post_bytes(
+    url: str, headers: Optional[dict] = None, data: Optional[dict] = None
+) -> bytes:
+    async with ClientSession() as session:
+        async with session.post(url, headers=headers, data=data) as r:
             result = await r.read()
+    return result
+
+
+async def post_json(
+    url: str, headers: Optional[dict] = None, data: Optional[dict] = None
+) -> bytes:
+    async with ClientSession() as session:
+        async with session.post(url, headers=headers, data=data) as r:
+            result = await r.json()
     return result

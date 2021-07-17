@@ -1,5 +1,7 @@
+import nonebot
 from pathlib import Path
-from nonebot.plugin import load_plugins
+
 
 _sub_plugins = set()
-_sub_plugins |= load_plugins(str((Path(__file__) / "modules").resolve()))
+
+_sub_plugins |= nonebot.load_plugins(str((Path(__file__).parent / "modules").resolve()))

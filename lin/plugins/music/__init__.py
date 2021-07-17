@@ -1,4 +1,4 @@
-from lin.plugin import on_command
+from lin.service import on_command
 from nonebot.adapters.cqhttp import Bot, MessageEvent
 from nonebot.adapters.cqhttp.message import MessageSegment, Message
 from nonebot.typing import T_State
@@ -18,7 +18,7 @@ __doc__ = """
   链接可以是 歌单 也可以是 单曲
 """
 
-music = on_command("music", __doc__, aliases={"音乐", "音乐下载"})
+music = on_command("music", __doc__)
 
 
 @music.args_parser

@@ -4,7 +4,7 @@ from loguru import logger
 from nonebot.adapters.cqhttp import Event
 from nonebot.adapters.cqhttp.bot import Bot
 from nonebot.adapters.cqhttp.message import Message, MessageSegment
-from lin.plugin import on_command
+from lin.service import on_command
 from nonebot.rule import to_me
 
 from lin.exceptions import ApiException
