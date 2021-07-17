@@ -1,5 +1,5 @@
 """
-    [-]TODO 权限 和 插件 的动态管理
+    [√]TODO 权限 和 插件 的动态管理
     [√]TODO 重构 部分插件代码
     [ ]TODO 重写 Code Runner 插件
     [-]TODO 整合 plugin 内部函数
@@ -10,7 +10,7 @@ import shutil
 import nonebot
 
 from lin.log import logger
-from lin.service import SERVICES_DIR
+from lin.service import SERVICES_DIR, _update_block_list, _load_block_list
 
 PLUGIN_INFO_DIR = SERVICES_DIR
 
@@ -29,3 +29,12 @@ async def _shutdown() -> None:
         logger.error("插件清理失败")
         repo = "插件信息清理失败请前往 /lin/data/services/ 目录手动清理"
         raise Exception(repo)
+
+
+@driver.on_startup
+async def _startup() -> None:
+    # load block list
+    logger.info("正在加载 block_list...")
+    _update_block_list(_load_block_list())
+    logger.debug("block_list 加载完成")
+    

@@ -1,12 +1,8 @@
-from logging import LogRecord, log
-import traceback
-from loguru import logger
 from nonebot.adapters.cqhttp import Event
 from nonebot.adapters.cqhttp.bot import Bot
-from nonebot.adapters.cqhttp.message import Message, MessageSegment
-from lin.service import on_command
-from nonebot.rule import to_me
 
+from lin.log import logger
+from lin.service import on_command
 from lin.exceptions import ApiException
 
 __doc__ = """

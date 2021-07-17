@@ -21,6 +21,13 @@ SERVICES_DIR = SERVICE_DIR / "services"
 os.makedirs(SERVICE_DIR, exist_ok=True)
 os.makedirs(SERVICES_DIR, exist_ok=True)
 
+block_list: dict = dict()
+
+
+def _update_block_list(data: dict) -> None:
+    global block_list
+    block_list = data
+
 
 def _load_block_list() -> dict:
     """
@@ -46,6 +53,7 @@ def _save_block_list(data: dict) -> None:
         
         保存被禁止使用的用户和群组
     """
+    _update_block_list(data)
 
     file = SERVICE_DIR / "ban.json"
     with open(file, "w")as f:
@@ -81,39 +89,35 @@ class Service:
 
     @staticmethod
     def auth_user(user_id: str) -> bool:
-        pass
+        return user_id in block_list["user"]
     
 
     @staticmethod
     def auth_group(group_id: str) -> bool:
-        pass
+        return group_id in block_list["group"]
 
 
     @staticmethod
     def block_user(user_id: str) -> None:
-        data = _load_block_list()
-        data["user"][user_id] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        _save_block_list(data)
+        block_list["user"][user_id] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        _save_block_list(block_list)
 
     @staticmethod
     def unblock_user(user_id: str) -> None:
-        data = _load_block_list()
-        data["user"].pop(user_id)
-        _save_block_list(data)
+        block_list["user"].pop(user_id)
+        _save_block_list(block_list)
 
 
     @staticmethod
     def block_group(group_id: str) -> None:
-        data = _load_block_list()
-        data["group"][group_id] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        _save_block_list(data)
+        block_list["group"][group_id] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        _save_block_list(block_list)
 
 
     @staticmethod
     def unblock_group(group_id: str) -> None:
-        data = _load_block_list()
-        data["group"].pop(group_id)
-        _save_block_list(data)
+        block_list["group"].pop(group_id)
+        _save_block_list(block_list)
 
 
 def on_message(rule: Optional[Union[Rule, T_RuleChecker]] = None,
@@ -455,15 +459,14 @@ async def _check_block(
     event: MessageEvent,
     state: T_State,
     ) -> None:
-    data = _load_block_list()
     user_id = event.get_user_id()
     
-    if user_id in data["user"]:
+    if Service.auth_user(user_id):
         logger.info(f"Ignore user: {user_id}")
         raise IgnoreException(f"Ignore user: {user_id}")
+  
     if isinstance(event, GroupMessageEvent):
         group_id = str(event.group_id)
-        if group_id in data["group"]:
+        if Service.auth_group(group_id):
             logger.info(f"Ignore group: {group_id}")
             raise IgnoreException(f"Ignore group: {group_id}")
-    logger.info("ckeck block finished")
