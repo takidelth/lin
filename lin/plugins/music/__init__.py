@@ -1,10 +1,11 @@
-from lin.service import on_command
 from nonebot.adapters.cqhttp import Bot, MessageEvent
 from nonebot.adapters.cqhttp.message import MessageSegment, Message
 from nonebot.typing import T_State
 
-from .data_source import MusicParse
 from lin.log import logger
+from lin.service import on_command, regex
+
+from .data_source import MusicParse
 
 __doc__ = """
 音乐解析插件:
@@ -52,7 +53,7 @@ async def _handle_event(bot: Bot, event: MessageEvent, state: T_State) -> None:
     if MusicParser.ok:
         await music.send("链接已确认，正在解析稍等一会哦")
     else:
-        # 对不起我只是太菜了
+        # 对不起我只是菜了一点
         await music.send(Message("[CQ:image,file=4a0d0ac0e92958b534969ee401537e4c.image,url=https://c2cpicdw.qpic.cn/offpic_new/1037447217//1037447217-1189060299-4A0D0AC0E92958B534969EE401537E4C/0?term=3]"))
         await music.reject("hmmmm...俺只可以解析单曲和歌单啦...")
 
