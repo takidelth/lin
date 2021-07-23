@@ -9,3 +9,6 @@ BotSelfConfig:
   session_expire_timeout: 60
 OtherPluginsConfig:
   plugin_ipypreter_image: "latest"
+GocqhttpApiConfig:
+  host: "127.0.0.1"
+  port: 5700

@@ -6,6 +6,7 @@ from .utils.yaml import load_yml
 CONFIG_PATH = Path(".") / "config.yml"
 config = load_yml(CONFIG_PATH)
 
+
 class BotSelfConfig:
     config: dict = config["BotSelfConfig"]
     
@@ -19,6 +20,13 @@ class BotSelfConfig:
     session_expire_timeout: timedelta = timedelta(
         seconds=config.get("session_expire_timeout", 60)
     )
+
+
+class GocqhttpApiConfig:
+    config: dict = config["GocqhttpApiConfig"]
+
+    host: str = config.get("host", "127.0.0.1")
+    port: int = config.get("port", 5700)
 
 
 class OtherPluginsConfig:

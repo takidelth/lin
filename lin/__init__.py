@@ -19,25 +19,7 @@ def init():
     nonebot.load_from_toml("pyproject.toml")
     if RUNTIME_CONFIG["debug"]:
         nonebot.load_plugin("nonebot_plugin_test")
-    logger.info(f"""Now running: lin
-
-            \033[31m▏\033[0mn
-            █▏ ､⺍
-            █▏⺰ʷʷｨ
-            █◣▄██◣
-            \033[31m◥██████▋
-            　◥████ █▎
-            　　███▉ █▎
-            　◢████◣\033[0m⌠ₘ℩
-            　　██◥█◣\≫
-            　　██　◥█◣
-            　　█▉　　█▊
-            　　█▊　　█▊
-            　　█▊　　█▋
-            　　 █▏　　█▙
-
-        卡其脱离太（
-""")
+    logger.info(f"Now running: lin")
 
 def run(app):
     nonebot.run(app=app)

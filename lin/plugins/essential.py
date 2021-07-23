@@ -3,9 +3,10 @@
     [√]TODO 重构 部分插件代码
     [√]TODO 重写 Code Runner 插件
     [√]TODO 整合 plugin 内部函数
-    [ ]TODO 添加 定时任务模块
+    [√]TODO 添加 定时任务模块
     [ ]TODO 添加 hitokoto(一言) 插件
     [ ]TODO 修改 music 插件 以正则触发
+    [√]TODO 添加 定时发送服务器状态插件
 """
 import shutil
 import nonebot

@@ -2,7 +2,7 @@ import os
 import re
 import json
 from datetime import datetime
-from typing import Set, List, Type, Tuple, Union, Optional, TYPE_CHECKING
+from typing import Any, Dict, Set, List, Type, Tuple, Union, Optional, TYPE_CHECKING
 from pathlib import Path
 from nonebot.adapters.cqhttp.event import GroupMessageEvent, MessageEvent
 from nonebot.adapters import Bot, Event
@@ -13,8 +13,10 @@ from nonebot.permission import Permission
 from nonebot.typing import T_State, T_Handler, T_RuleChecker
 from nonebot.rule import Rule, startswith, endswith, keyword, command, shell_command, ArgumentParser, regex
 
-from lin.exceptions import IgnoreException
 from lin.log import logger
+from lin.exceptions import IgnoreException
+from lin.config import GocqhttpApiConfig
+from lin.utils.requests import post_bytes, post_json
 
 SERVICE_DIR = Path(".") / "lin" / "data" / "services"
 SERVICES_DIR = SERVICE_DIR / "services"
@@ -118,6 +120,69 @@ class Service:
     def unblock_group(group_id: str) -> None:
         block_list["group"].pop(group_id)
         _save_block_list(block_list)
+
+
+class GocqhttpApiServer:
+    """一个 gocqhttp HTTP API 的封装"""
+
+    API_ADDR: str = f"http://{GocqhttpApiConfig.host}:{GocqhttpApiConfig.port}"
+
+    @classmethod
+    async def send_private_msg(
+        cls,
+        user_id: Optional[int] = None, 
+        group_id: Optional[int] = None, 
+        message=Union[str],
+        auto_escape: bool = False
+    ) -> Dict[str, Any]:
+        return await cls.send_msg(message_type="private",
+                            user_id=user_id, 
+                            group_id=group_id,
+                            message=message, 
+                            auto_escape=auto_escape
+                )
+    
+
+    @classmethod
+    async def send_group_msg(
+        cls,
+        user_id: Optional[int] = None, 
+        group_id: Optional[int] = None, 
+        message=Union[str],
+        auto_escape: bool = False
+    ) -> Dict[str, Any]:
+        return await cls.send_msg(message_type="private",
+                            user_id=user_id, 
+                            group_id=group_id,
+                            message=message, 
+                            auto_escape=auto_escape
+                )
+
+
+    @classmethod
+    async def send_msg(
+        cls,
+        message_type: Optional[str] = "", 
+        user_id: Optional[int] = None, 
+        group_id: Optional[int] = None, 
+        message=Union[str],
+        auto_escape: bool = False
+    ) -> Dict[str, Any]:
+        url = cls.API_ADDR + "/send_msg?"
+        if (not message_type) and group_id != None:
+            message_type = "group"
+        elif (not message_type) and user_id != None:
+            message_type = "private"
+        params = {
+            "message_type": message_type,
+            "user_id": str(user_id),
+            "group_id": str(group_id),
+            "message": message,
+            "auto_escape": str(auto_escape)
+        }
+        result = json.loads(await post_bytes(url, params=params))
+        logger.debug(result)
+        return result
 
 
 def on_message(rule: Optional[Union[Rule, T_RuleChecker]] = None,
