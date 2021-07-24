@@ -11,6 +11,22 @@
 
 <br>
 
+## TODO
+
+ - [x] 权限 和 插件 的动态管理
+ - [x] 重构 部分插件代码
+ - [x] 重写 Code Runner 插件
+ - [x] 整合 plugin 内部函数
+ - [x] 添加 定时任务模块
+ - [x] 添加 定时发送服务器状态插件
+ - [x] 添加 复读打断功能
+ - [ ] 添加 hitokoto(一言) 插件
+ - [ ] 修改 music 插件 以正则触发
+ - [ ] 添加 灰白表情包生成插件
+ 
+
+<br>
+
 ## 特别感谢
  - [Mrs4s](https://github.com/Mrs4s/)/[go-cqhttp](https://github.com/Mrs4s/go-cqhttp)
  - [NoneBot](https://github.com/nonebot/)/[NoneBot2](https://github.com/nonebot/nonebot2)
