@@ -24,6 +24,6 @@ hitokoto = on_command(
 
 @hitokoto.handle()
 async def _hitokoto(bot: Bot, event: MessageEvent) -> None:
-    data = get_json(choice(URL))
-    repo = data.get("hitokoto")
-    hitokoto.finish(repo)
+    data = await get_json(choice(URL))
+    repo = choice(data).get("hitokoto")
+    await hitokoto.finish(repo)
