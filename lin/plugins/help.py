@@ -3,7 +3,7 @@ import json
 from pathlib import Path
 
 from nonebot.typing import T_State
-from nonebot.adapters.cqhttp import Bot, Event
+from nonebot.adapters.gocq import Bot, Event
 
 from lin.service import SERVICES_DIR, on_command
 from lin.log import logger

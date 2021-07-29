@@ -1,5 +1,5 @@
-from nonebot.adapters.cqhttp import Bot
-from nonebot.adapters.cqhttp.event import GroupMessageEvent, MessageEvent
+from nonebot.adapters.gocq import Bot
+from nonebot.adapters.gocq.event import GroupMessageEvent, MessageEvent
 from nonebot.permission import SUPERUSER
 from nonebot.typing import T_State
 

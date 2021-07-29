@@ -1,5 +1,5 @@
 import nonebot
-from nonebot.adapters.cqhttp import Bot as LINGBot
+from nonebot.adapters.gocq import Bot as LINGBot
 
 from .config import RUNTIME_CONFIG
 from .log import logger
@@ -14,7 +14,7 @@ def driver():
 
 def init():    
     nonebot.init(**RUNTIME_CONFIG)
-    driver().register_adapter("cqhttp", LINGBot)
+    driver().register_adapter("gocq", LINGBot)
     nonebot.load_plugins("lin/plugins")
     nonebot.load_from_toml("pyproject.toml")
     if RUNTIME_CONFIG["debug"]:

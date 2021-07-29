@@ -1,7 +1,7 @@
 from random import randint, choice
 
-from nonebot.adapters.cqhttp import Bot, GroupMessageEvent
-from nonebot.adapters.cqhttp.message import MessageSegment, Message
+from nonebot.adapters.gocq import Bot, GroupMessageEvent
+from nonebot.adapters.gocq.message import MessageSegment, Message
 
 from lin.log import logger
 from lin.service import on_message

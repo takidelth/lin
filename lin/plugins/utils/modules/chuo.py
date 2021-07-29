@@ -1,7 +1,7 @@
-from nonebot.adapters.cqhttp.event import Event, NoticeEvent
-from nonebot.adapters.cqhttp.message import Message
+from nonebot.adapters.gocq.event import Event, NoticeEvent
+from nonebot.adapters.gocq.message import Message
 from nonebot.plugin import  on_notice
-from nonebot.adapters.cqhttp import Bot
+from nonebot.adapters.gocq import Bot
 from nonebot.typing import T_State
 from random import choice
 

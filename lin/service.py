@@ -4,7 +4,7 @@ import json
 from datetime import datetime
 from typing import Any, Dict, Set, List, Type, Tuple, Union, Optional, TYPE_CHECKING
 from pathlib import Path
-from nonebot.adapters.cqhttp.event import GroupMessageEvent, MessageEvent
+from nonebot.adapters.gocq.event import GroupMessageEvent, MessageEvent
 from nonebot.adapters import Bot, Event
 from nonebot.matcher import Matcher
 from nonebot.handler import Handler

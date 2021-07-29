@@ -1,6 +1,6 @@
 from random import choice
 
-from nonebot.adapters.cqhttp import Bot, MessageEvent
+from nonebot.adapters.gocq import Bot, MessageEvent
 
 from lin.service import on_command
 from lin.utils.requests import get_json

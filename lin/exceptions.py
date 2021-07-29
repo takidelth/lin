@@ -11,7 +11,7 @@ from traceback import format_exc
 
 from nonebot.message import run_postprocessor
 from nonebot.matcher import Matcher
-from nonebot.adapters.cqhttp import Bot, Event
+from nonebot.adapters.gocq import Bot, Event
 from nonebot.typing import T_State
 
 from lin.log import logger

@@ -2,7 +2,7 @@ import re
 import json
 
 from nonebot.typing import T_State
-from nonebot.adapters.cqhttp import Bot, MessageEvent
+from nonebot.adapters.gocq import Bot, MessageEvent
 from pydantic.types import Json
 
 from lin.rule import to_bot

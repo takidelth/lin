@@ -1,5 +1,9 @@
-from nonebot.adapters.cqhttp import Event
-from nonebot.adapters.cqhttp.bot import Bot
+import requests_async as requests
+
+from nonebot.adapters.gocq import Event
+from nonebot.adapters.gocq.bot import Bot
+from nonebot.adapters.gocq.event import GroupMessageEvent
+from nonebot.adapters.gocq.message import Message, MessageSegment
 
 from lin.log import logger
 from lin.service import on_command
@@ -15,5 +19,6 @@ test = on_command("test", __doc__)
 
 @test.handle()
 async def first_handle_receive(bot : Bot, event : Event, state: dict):
-    await hs.send_private_msg(user_id=1037447217, message="test")
-
+    
+    msg = Message(f'[CQ:tts,text={str(event.get_message())}]')
+    await test.finish(msg)

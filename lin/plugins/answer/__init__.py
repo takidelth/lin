@@ -1,7 +1,7 @@
 import json
 from nonebot.typing import T_State
-from nonebot.adapters.cqhttp import Bot, Event
-from nonebot.adapters.cqhttp.message import Message
+from nonebot.adapters.gocq import Bot, Event
+from nonebot.adapters.gocq.message import Message
 
 from lin.rule import to_bot
 from lin.utils import requests

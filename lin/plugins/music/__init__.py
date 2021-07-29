@@ -1,5 +1,5 @@
-from nonebot.adapters.cqhttp import Bot, MessageEvent
-from nonebot.adapters.cqhttp.message import MessageSegment, Message
+from nonebot.adapters.gocq import Bot, MessageEvent
+from nonebot.adapters.gocq.message import MessageSegment, Message
 from nonebot.typing import T_State
 
 from lin.log import logger
