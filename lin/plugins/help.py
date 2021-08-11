@@ -1,6 +1,7 @@
 import os
 import json
 from pathlib import Path
+from nonebot.adapters.cqhttp.message import Message
 
 from nonebot.typing import T_State
 from nonebot.adapters.cqhttp import Bot, Event
@@ -41,7 +42,7 @@ async def _help_handle(bot: Bot, event: Event, state: T_State):
         await help.finish(repo)
 
     elif msg[0] == "info":
-        if len(msg) < 3:
+        if len(msg) < 2:
             await help.finish("帮助主体不能为空")
         
         cmd = msg[1]
@@ -56,7 +57,7 @@ async def _help_handle(bot: Bot, event: Event, state: T_State):
             f"enable: {data['enable']}\n"
             f"docs: {data['docs']}"
         )
-        await help.finish(repo)
+        await help.finish(Message(repo))
     
     else:
         help.finish("未找到相关命令")

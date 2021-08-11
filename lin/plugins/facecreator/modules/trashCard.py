@@ -27,15 +27,16 @@ __doc__ = """
 此功能基于 A60佬 的源码基础进行了修改 
 源项目地址： https://github.com/djkcyl/trashCard
 使用：
-  @凌 trashcard
-  @凌 tc
-  @凌 废物证
+  trashcard
+  tc
+  废物证
   
   换新
-  @凌 trashcard 换新
-  @凌 tc 换新
-  @凌 废物证 换新
-"""
+  trashcard 换新
+  tc 换新
+  废物证 换新
+
+""" + str(MessageSegment.image(f"file://{str(IMG_PATH / 'temp.png')}"))
 
 
 class TrashCard:
@@ -155,7 +156,7 @@ class TrashCard:
         await TrashCard.drawCard(qqid, qqnick, groupname, id, time)
         
 
-    trashCard = on_command(cmd="trashcard", aliases={"tc", "废物证"}, rule=to_bot())    
+    trashCard = on_command(cmd="trashcard", aliases={"tc", "废物证"})    
 
 
     @trashCard.handle()
