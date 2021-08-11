@@ -18,6 +18,7 @@ class MusicParse:
 
     @staticmethod
     def get_type_and_id(string: str, server_type: str) -> Union[str, str] or None:
+        """ on_regex("(song|playlist|songid|details).*?id=([0-9a-zA-Z]+|[0-9]+)") """
         if server_type == "netease":
             pattern = "(song|playlist).*?id=([0-9]+)"
         elif server_type == "tencent":

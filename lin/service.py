@@ -4,7 +4,7 @@ import json
 from datetime import datetime
 from typing import Any, Dict, Set, List, Type, Tuple, Union, Optional, TYPE_CHECKING
 from pathlib import Path
-from nonebot.adapters.gocq.event import GroupMessageEvent, MessageEvent
+from nonebot.adapters.cqhttp.event import GroupMessageEvent, MessageEvent
 from nonebot.adapters import Bot, Event
 from nonebot.matcher import Matcher
 from nonebot.handler import Handler
@@ -88,6 +88,11 @@ def _save_service_config(service: str, data: dict) -> None:
 class Service:
     """一个集成的服务类"""
 
+    class Auth:
+        """权限管理服务"""
+        # TODO 实现按照插件 priority 属性分类默认可用插件
+        # TODO 插件的订阅化
+        pass
 
     @staticmethod
     def auth_user(user_id: str) -> bool:

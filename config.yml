@@ -8,6 +8,7 @@ BotSelfConfig:
   command_sep: ["."]
   session_expire_timeout: 60
 OtherPluginsConfig:
+  gocqhttp_data_path: "/home/taki/item/lin/go-cqhttp/data/"
   plugin_ipypreter_image: "latest"
 GocqhttpApiConfig:
   host: "127.0.0.1"

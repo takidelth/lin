@@ -1,7 +1,7 @@
-from nonebot.adapters.gocq.event import Event, NoticeEvent
-from nonebot.adapters.gocq.message import Message
+from nonebot.adapters.cqhttp.event import Event, NoticeEvent
+from nonebot.adapters.cqhttp.message import Message
 from nonebot.plugin import  on_notice
-from nonebot.adapters.gocq import Bot
+from nonebot.adapters.cqhttp import Bot
 from nonebot.typing import T_State
 from random import choice
 
@@ -18,9 +18,9 @@ replies = [
 
 
 @stamp.handle()
-async def first_handle(bot: Bot, event: NoticeEvent, state: T_State):
+async def first_handle(bot: Bot, event: NoticeEvent, state: T_State) -> None:
+    
     dInfo = event.dict()
-
     if (event.get_event_name() == 'notice.notify.poke') and dInfo.get("target_id") == int(bot.self_id):
         msg = Message(choice(replies))
         await bot.send(

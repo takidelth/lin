@@ -141,4 +141,6 @@ dmypy.json
 lin/plugins/runcode/code/
 lin/data/*
 
+*.json
+*.png
 # End of https://www.toptal.com/developers/gitignore/api/python

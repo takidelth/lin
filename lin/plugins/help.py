@@ -3,7 +3,7 @@ import json
 from pathlib import Path
 
 from nonebot.typing import T_State
-from nonebot.adapters.gocq import Bot, Event
+from nonebot.adapters.cqhttp import Bot, Event
 
 from lin.service import SERVICES_DIR, on_command
 from lin.log import logger
@@ -36,11 +36,14 @@ async def _help_handle(bot: Bot, event: Event, state: T_State):
         repo = ""
         for _, _, files in os.walk(SERVICES_DIR):
             for file in files:
-                repo += f"『{file.split('.')[0]}』\n"
+                repo += f"  [o] {file.split('.')[0]}\n"
         repo = "凌能做的事情如下\n" + repo + "没有反应可能是没有权限或者属于不可触发的命令"
         await help.finish(repo)
 
     elif msg[0] == "info":
+        if len(msg) < 3:
+            await help.finish("帮助主体不能为空")
+        
         cmd = msg[1]
         cmd_file = SERVICES_DIR / f"{cmd}.json"
         

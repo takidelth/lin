@@ -8,8 +8,8 @@ async def read_text(path: Path, encoding: str = "utf-8") -> str:
     return data
 
 
-async def read_bytes(path: Path, encoding: str = "utf-8") -> bytes:
-    async with aiofiles.open(path, "rb", encoding=encoding)as r:
+async def read_bytes(path: Path) -> bytes:
+    async with aiofiles.open(path, "rb")as r:
         data = await r.read()
     return data
 

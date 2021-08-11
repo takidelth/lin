@@ -1,8 +1,8 @@
 from os import stat
 from nonebot.typing import T_State
-from nonebot.adapters.gocq import Bot
-from nonebot.adapters.gocq.event import MessageEvent
-from nonebot.adapters.gocq.message import MessageSegment
+from nonebot.adapters.cqhttp import Bot
+from nonebot.adapters.cqhttp.event import MessageEvent
+from nonebot.adapters.cqhttp.message import MessageSegment
 
 from lin.log import logger
 from lin.utils import requests

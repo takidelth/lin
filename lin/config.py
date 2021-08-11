@@ -32,6 +32,7 @@ class GocqhttpApiConfig:
 class OtherPluginsConfig:
     config: dict = config["OtherPluginsConfig"]
     
+    gocqhttp_data_path: str = config.get("gocqhttp_data_path")
     plugin_ipypreter_image: str = config.get("your_docker_image_tag", "latest") 
 
 
@@ -44,5 +45,6 @@ RUNTIME_CONFIG = {
     "command_start": BotSelfConfig.command_start,
     "command_sep": BotSelfConfig.command_sep,
     "session_expire_timeout": BotSelfConfig.session_expire_timeout,
+    "gocqhttp_data_path": OtherPluginsConfig.gocqhttp_data_path,
     "PLUGIN_IPYPRETER_IMAGE": OtherPluginsConfig.plugin_ipypreter_image
 }
