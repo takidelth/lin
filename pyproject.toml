@@ -14,7 +14,7 @@ nb-cli = "^0.1.0"
 nonebot-test = "^0.1.0"
 
 [nonebot.plugins]
-plugins = ["nonebot-plugin-ipypreter"]
+plugins = []
 plugin_dirs = ["lin/plugins"]
 
 [build-system]
