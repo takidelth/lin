@@ -6,8 +6,6 @@ from pathlib import Path
 from typing import Optional, Union
 from aiohttp.client_exceptions import ServerDisconnectedError
 from PIL import Image, ImageFont, ImageDraw
-from string import ascii_letters, digits
-from random import sample
 
 from nonebot.typing import T_State
 from nonebot.adapters.cqhttp import Bot, Event
