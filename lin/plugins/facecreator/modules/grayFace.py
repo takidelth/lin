@@ -41,6 +41,7 @@ class GrayFace:
     @classmethod
     async def translateToJapan(cls, source: str) -> str:
         url = f"http://translate.google.cn/translate_a/single?client=gtx&dt=t&dj=1&ie=UTF-8&sl=auto&tl=ja&q={source}"
+        url = f"https://fanyi.youdao.com/translate?&doctype=json&type=ZH_CN2JA&i={source}"
         data = json.loads(await get_bytes(url))
         return data["sentences"][0]["trans"]
 

@@ -56,7 +56,7 @@ class TrashCard:
 
 
     @classmethod
-    def appendCard(cls,
+    def saveCard(cls,
                     qqid: int, 
                     qqnick: str, 
                     id: int, 
@@ -151,11 +151,12 @@ class TrashCard:
         id: int = len(cls.cardList.keys()) + 1 if is_first else cls.cardList[qqid]['id']
         time: str = datetime.now().strftime("%Y-%m-%d\n%H:%M:%S")
 
-        cls.appendCard(qqid, qqnick, id, time, groupname)
+        cls.saveCard(qqid, qqnick, id, time, groupname)
 
         await TrashCard.drawCard(qqid, qqnick, groupname, id, time)
         
 
+    cardList = loadCardList()
     trashCard = on_command(cmd="trashcard", aliases={"tc", "废物证"})    
 
 
