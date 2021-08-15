@@ -3,19 +3,18 @@ import os
 import json
 from io import BytesIO
 from pathlib import Path
-from copy import deepcopy
 from datetime import datetime
-from typing import Dict, List, Optional, Union
+from typing import Dict, Union
 from PIL import Image, ImageFont, ImageDraw
 
 from nonebot.adapters.cqhttp import Bot
-from nonebot.adapters.cqhttp.event import Event, MessageEvent, PrivateMessageEvent, GroupMessageEvent
+from nonebot.adapters.cqhttp.event import Event, MessageEvent, GroupMessageEvent
 from nonebot.adapters.cqhttp.message import MessageSegment
 
 from lin.rule import to_bot
 from lin.service import on_command
-from lin.utils.requests import get_bytes
-
+from lin.utils.api import qq_avatar
+from lin.log import logger
 
 SRC_PATH = Path(__file__).parent / "src"
 IMG_PATH = Path(__file__).parent / "img/card"
@@ -41,10 +40,7 @@ __doc__ = """
 
 class TrashCard:
     
-    cardList = dict()
 
-
-    @classmethod
     def loadCardList() -> Dict[int, Dict[Union[str, int], Union[str, int]]]:
         try:
             data = json.loads(DAT_PATH.read_bytes())
@@ -52,12 +48,12 @@ class TrashCard:
             data = dict()
             with open(DAT_PATH, "w")as f:
                 f.write(json.dumps(data, indent=4))
-            return data
+        return data
 
 
     @classmethod
     def saveCard(cls,
-                    qqid: int, 
+                    qqid: str, 
                     qqnick: str, 
                     id: int, 
                     time: str,
@@ -75,7 +71,7 @@ class TrashCard:
 
 
     @classmethod
-    def cardIsExists(cls, qqid: int) -> bool:
+    def cardIsExists(cls, qqid: str) -> bool:
         if cls.cardList.get(qqid, None):
             return True
         else:
@@ -83,7 +79,7 @@ class TrashCard:
 
 
     @classmethod
-    async def drawCard(cls, qqid: int, qqnick: str, groupname: str, id: int, time: str) -> None:
+    async def drawCard(cls, qqid: str, qqnick: str, groupname: str, id: int, time: str) -> None:
         """默认存储在 ``./img/`` 目录下"""
         # 打开模板图
         template = Image.open(str(SRC_PATH / 'template.png'))
@@ -94,8 +90,7 @@ class TrashCard:
         JetBrainsMonoExtraBoldFont64 = ImageFont.truetype(str(SRC_PATH / 'JetBrainsMono-ExtraBold.ttf'), 64)
         JetBrainsMonoExtraBoldFont32 = ImageFont.truetype(str(SRC_PATH / 'JetBrainsMono-ExtraBold.ttf'), 32)
         # 填入头像
-        avatarUrl = f"https://q1.qlogo.cn/g?b=qq&nk={str(qqid)}&s=5"
-        avatarContent = await get_bytes(avatarUrl)
+        avatarContent = await qq_avatar(qqid)
         avatarBio = BytesIO()
         avatarBio.write(avatarContent)
         avatarImg = Image.open(avatarBio)
@@ -107,7 +102,7 @@ class TrashCard:
         groupname = await cls.getCutStr(groupname, 10)
         draw = ImageDraw.Draw(template)
         draw.text((180, 510), str(id).rjust(10, "0"), font=JetBrainsMonoExtraBoldFont68, fill='black')
-        draw.text((332, 88), str(qqid), font=JetBrainsMonoExtraBoldFont64, fill='black')
+        draw.text((332, 88), qqid, font=JetBrainsMonoExtraBoldFont64, fill='black')
         draw.text((330, 172), qqnick, font=msyhbdFont60, fill='black')
         draw.text((625, 318), groupname, font=FZDBSJWFont34, fill="black")
         draw.text((625, 368), time, font=JetBrainsMonoExtraBoldFont32, fill='black')
@@ -136,14 +131,14 @@ class TrashCard:
     
     
     @classmethod
-    async def sendCard(cls, qqid: int) -> None:
+    async def sendCard(cls, qqid: str) -> None:
         cardPath = IMG_PATH / f"{cls.cardList[qqid]['id']}.png"
         await TrashCard.trashCard.send(MessageSegment.image(f"file://{str(cardPath)}"))
 
 
     @classmethod
-    async def drawCardProc(cls, bot: Bot, event: MessageEvent, is_first: bool = True) -> None:
-        qqid: int = event.user_id
+    async def drawCardToSendProc(cls, bot: Bot, event: MessageEvent, is_first: bool = True) -> None:
+        qqid: str = str(event.user_id)
         qqnick: str = event.sender.nickname
         groupname: str = ""
         if isinstance(event, GroupMessageEvent):
@@ -153,7 +148,10 @@ class TrashCard:
 
         cls.saveCard(qqid, qqnick, id, time, groupname)
 
+        # draw
         await TrashCard.drawCard(qqid, qqnick, groupname, id, time)
+        # send
+        await TrashCard.sendCard(qqid)
         
 
     cardList = loadCardList()
@@ -162,18 +160,16 @@ class TrashCard:
 
     @trashCard.handle()
     async def _handle(bot: Bot, event: MessageEvent) -> None:
-        qqid: int = event.user_id
+        qqid: str = str(event.user_id)
         msg = str(event.message).strip()
 
         if TrashCard.cardIsExists(qqid) and "换新" in msg:
-            await TrashCard.drawCardProc(bot, event, is_first=False)
-            await TrashCard.sendCard(qqid)
+            await TrashCard.drawCardToSendProc(bot, event, is_first=False)
             await TrashCard.trashCard.finish("呐, 这是阁下新的废物证， 好好保存哦")
         elif TrashCard.cardIsExists(qqid):
             await TrashCard.sendCard(qqid)
-            await TrashCard.trashCard.reject("阁下的废物证已存在， 如果想要重新生成可以回复 '换新'")
+            await TrashCard.trashCard.reject("阁下已经有一张了， 如果想要重新生成可以回复 '换新'")
         elif (not TrashCard.cardIsExists(qqid)) and "换新" in msg:
             await TrashCard.trashCard.reject("阁下暂时还没有废物证，回复 '是' 凌可以为你生成一张哦")
         else:
-            await TrashCard.drawCardProc(bot, event)
-            await TrashCard.sendCard(qqid)
+            await TrashCard.drawCardToSendProc(bot, event)

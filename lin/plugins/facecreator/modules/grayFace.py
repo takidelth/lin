@@ -9,7 +9,7 @@ from PIL import Image, ImageFont, ImageDraw
 
 from nonebot.typing import T_State
 from nonebot.adapters.cqhttp import Bot, Event
-from nonebot.adapters.cqhttp.message import Message, MessageSegment
+from nonebot.adapters.cqhttp.message import MessageSegment
 
 from lin.log import logger
 from lin.service import on_command

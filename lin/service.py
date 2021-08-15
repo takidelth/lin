@@ -54,6 +54,7 @@ def _save_block_list(data: dict) -> None:
     :说明:
         
         保存被禁止使用的用户和群组
+
     """
     _update_block_list(data)
 
@@ -93,7 +94,9 @@ class Service:
         # TODO 实现按照插件 priority 属性分类默认可用插件
         # TODO 插件的订阅化
         pass
+    
 
+    # TODO 检查 群组 和 用户 是否存在
     @staticmethod
     def auth_user(user_id: str) -> bool:
         return user_id in block_list["user"]
