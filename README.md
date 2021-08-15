@@ -18,6 +18,13 @@
 
 <br>
 
+## 功能列表
+<details>
+
+</details>
+
+<br>
+
 ## TODO
 
  - [x] 权限 和 插件 的动态管理

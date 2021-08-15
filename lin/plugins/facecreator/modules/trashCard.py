@@ -3,18 +3,17 @@ import os
 import json
 from io import BytesIO
 from pathlib import Path
-from copy import deepcopy
 from datetime import datetime
-from typing import Dict, List, Optional, Union
+from typing import Dict, Union
 from PIL import Image, ImageFont, ImageDraw
 
 from nonebot.adapters.cqhttp import Bot
-from nonebot.adapters.cqhttp.event import Event, MessageEvent, PrivateMessageEvent, GroupMessageEvent
+from nonebot.adapters.cqhttp.event import Event, MessageEvent, GroupMessageEvent
 from nonebot.adapters.cqhttp.message import MessageSegment
 
 from lin.rule import to_bot
 from lin.service import on_command
-from lin.utils.requests import get_bytes
+from lin.utils.api import qq_avatar
 
 
 SRC_PATH = Path(__file__).parent / "src"
@@ -44,7 +43,6 @@ class TrashCard:
     cardList = dict()
 
 
-    @classmethod
     def loadCardList() -> Dict[int, Dict[Union[str, int], Union[str, int]]]:
         try:
             data = json.loads(DAT_PATH.read_bytes())
@@ -94,8 +92,7 @@ class TrashCard:
         JetBrainsMonoExtraBoldFont64 = ImageFont.truetype(str(SRC_PATH / 'JetBrainsMono-ExtraBold.ttf'), 64)
         JetBrainsMonoExtraBoldFont32 = ImageFont.truetype(str(SRC_PATH / 'JetBrainsMono-ExtraBold.ttf'), 32)
         # 填入头像
-        avatarUrl = f"https://q1.qlogo.cn/g?b=qq&nk={str(qqid)}&s=5"
-        avatarContent = await get_bytes(avatarUrl)
+        avatarContent = await qq_avatar(qqid)
         avatarBio = BytesIO()
         avatarBio.write(avatarContent)
         avatarImg = Image.open(avatarBio)
