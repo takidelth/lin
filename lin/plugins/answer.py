@@ -1,4 +1,9 @@
-import json
+"""
+    :说明:
+      此插件使用的 ``API`` 是 Tampermonkey 的 "超星王珂住手(改)(查题可用)" 脚本的接口
+      https://bbs.tampermonkey.net.cn/forum.php?mod=viewthread&tid=15
+"""
+
 from nonebot.typing import T_State
 from nonebot.adapters.cqhttp import Bot, Event
 from nonebot.adapters.cqhttp.message import Message
@@ -6,17 +11,19 @@ from nonebot.adapters.cqhttp.message import Message
 from lin.rule import to_bot
 from lin.utils import requests
 from lin.service import on_command
-from lin.exceptions import ApiException, BaseBotException
+from lin.exceptions import ApiException
 from lin.log import logger
 
 API_URL = "http://cx.icodef.com/wyn-nb?v=2"
 headers = {
     "user-agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.212 Safari/537.36",
+    "Content-type": "application/x-www-form-urlencoded",
+    "Authorization": ""
 }
 
 __doc__ = """
 说明:
-  获取网课答案
+  获取 超星网课 答案
 使用:
   /ans <网课题目内容>
 """

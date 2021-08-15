@@ -6,12 +6,10 @@ from pathlib import Path
 from typing import Optional, Union
 from aiohttp.client_exceptions import ServerDisconnectedError
 from PIL import Image, ImageFont, ImageDraw
-from string import ascii_letters, digits
-from random import sample
 
 from nonebot.typing import T_State
 from nonebot.adapters.cqhttp import Bot, Event
-from nonebot.adapters.cqhttp.message import Message, MessageSegment
+from nonebot.adapters.cqhttp.message import MessageSegment
 
 from lin.log import logger
 from lin.service import on_command
@@ -41,7 +39,7 @@ class GrayFace:
     @classmethod
     async def translateToJapan(cls, source: str) -> str:
         url = f"http://translate.google.cn/translate_a/single?client=gtx&dt=t&dj=1&ie=UTF-8&sl=auto&tl=ja&q={source}"
-        url = f"https://fanyi.youdao.com/translate?&doctype=json&type=ZH_CN2JA&i={source}"
+        # url = f"https://fanyi.youdao.com/translate?&doctype=json&type=ZH_CN2JA&i={source}"
         data = json.loads(await get_bytes(url))
         return data["sentences"][0]["trans"]
 
