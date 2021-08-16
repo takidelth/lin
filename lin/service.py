@@ -9,7 +9,7 @@ from nonebot.adapters import Bot, Event
 from nonebot.matcher import Matcher
 from nonebot.handler import Handler
 from nonebot.message import run_preprocessor
-from nonebot.permission import Permission
+from nonebot.permission import Permission, SUPERUSER
 from nonebot.typing import T_State, T_Handler, T_RuleChecker
 from nonebot.rule import Rule, startswith, endswith, keyword, command, shell_command, ArgumentParser, regex
 
@@ -63,8 +63,9 @@ def _save_block_list(data: dict) -> None:
         f.write(json.dumps(data, indent=4))
 
 
-def _load_service_config(service: str, docs: str) -> dict:
-    file = SERVICES_DIR / (service.replace("/", "") + ".json")
+def _load_service_config(service: str, docs: str, permission: Permission) -> dict:
+    server_type = "admin_" if permission == SUPERUSER else ""
+    file = SERVICES_DIR / (server_type + service.replace("/", "") + ".json")
     try:
         data = json.loads(file.read_bytes())
     except Exception:
@@ -440,7 +441,7 @@ def on_command(cmd: Union[str, Tuple[str, ...]],
     handlers.insert(0, _strip_cmd)
 
     commands = set([cmd]) | (aliases or set())
-    _load_service_config(str(cmd), docs)
+    _load_service_config(str(cmd), docs, kwargs.get("permission"))
     return on_message(command(*commands) & rule, handlers=handlers, **kwargs)
 
 
