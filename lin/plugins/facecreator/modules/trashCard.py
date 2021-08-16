@@ -13,7 +13,7 @@ from nonebot.adapters.cqhttp.message import MessageSegment
 
 from lin.rule import to_bot
 from lin.service import on_command
-from lin.utils.api import qq_avatar
+from lin.utils.api import get_qq_avatar
 from lin.log import logger
 
 SRC_PATH = Path(__file__).parent / "src"
@@ -90,7 +90,7 @@ class TrashCard:
         JetBrainsMonoExtraBoldFont64 = ImageFont.truetype(str(SRC_PATH / 'JetBrainsMono-ExtraBold.ttf'), 64)
         JetBrainsMonoExtraBoldFont32 = ImageFont.truetype(str(SRC_PATH / 'JetBrainsMono-ExtraBold.ttf'), 32)
         # 填入头像
-        avatarContent = await qq_avatar(qqid)
+        avatarContent = await get_qq_avatar(qqid)
         avatarBio = BytesIO()
         avatarBio.write(avatarContent)
         avatarImg = Image.open(avatarBio)

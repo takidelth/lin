@@ -6,7 +6,7 @@ from nonebot.typing import T_State
 from lin.service import on_command, Service as sv
 from lin.log import logger
 
-from .data_source import get_id
+from ._data_source import get_id
 
 __doc__ = """
 封禁用户
