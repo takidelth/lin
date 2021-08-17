@@ -119,15 +119,6 @@ class ServiceManager:
     def unblock_group(self, group_id: str) -> None:
         self._block_list["group"].pop(group_id)
 
-
-    @classmethod
-    async def init(cls):
-        logger.info("正在加载 block_list...")
-        cls._block_list = await cls._load_block_list()
-        await cls.block_group("123456")
-        print(cls._block_list)
-        logger.debug("block_list 加载完成")
-
     
     @run_preprocessor
     async def _check_block(
@@ -149,6 +140,7 @@ class ServiceManager:
                 raise IgnoreException(f"Ignore group: {group_id}")
 
 
+# ServiceManager 的实例化
 service_manager = ServiceManager()
 
 

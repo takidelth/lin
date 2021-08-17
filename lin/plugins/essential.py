@@ -28,5 +28,4 @@ async def _shutdown() -> None:
 
 @driver.on_startup
 async def _startup() -> None:
-    # init ServiceManager
-    sv.block_group("123456")
+    pass
