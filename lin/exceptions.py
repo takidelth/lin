@@ -62,6 +62,14 @@ class IgnoreException(BaseBotException):
     prompt = "对象不在服务范围内"
 
 
+class GroupIdInvalidException(BaseBotException):
+    prompt = "无效的 GroupId 或此 GroupId 不存在群列表"
+
+
+class FriendIdInvalidException(BaseBotException):
+    prompt = "无效的好友 QQID"
+
+
 @run_postprocessor
 async def _track_error(
     matcher: Matcher,

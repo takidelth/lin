@@ -1,8 +1,9 @@
 import shutil
 import nonebot
+from pydantic.errors import DecimalError
 
 from lin.log import logger
-from lin.service import SERVICES_DIR, _update_block_list, _load_block_list
+from lin.service import SERVICES_DIR, service_manager as sv
 
 PLUGIN_INFO_DIR = SERVICES_DIR
 
@@ -22,10 +23,10 @@ async def _shutdown() -> None:
         repo = "插件信息清理失败请前往 /lin/data/services/ 目录手动清理"
         raise Exception(repo)
 
+    # 保存 block_list 信息
+    sv.save_block_list()
 
 @driver.on_startup
 async def _startup() -> None:
-    # load block list
-    logger.info("正在加载 block_list...")
-    _update_block_list(_load_block_list())
-    logger.debug("block_list 加载完成")
+    # init ServiceManager
+    sv.block_group("123456")

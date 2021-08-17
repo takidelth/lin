@@ -16,9 +16,9 @@ async def read_bytes(path: Path) -> bytes:
 
 async def write_text(path: Path, content: bytes, encoding: str = "utf-8") -> None:
     async with aiofiles.open(path, "w", encoding=encoding)as r:
-        await r.write(content)
+        return await r.write(content)
 
 
 async def write_bytes(path: Path, content: bytes, encoding: str = "utf-8") -> None:
     async with aiofiles.open(path, "wb", encoding=encoding)as r:
-        await r.write(content)
+        return await r.write(content)

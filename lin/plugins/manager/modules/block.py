@@ -3,7 +3,7 @@ from nonebot.adapters.cqhttp.event import GroupMessageEvent, MessageEvent
 from nonebot.permission import SUPERUSER
 from nonebot.typing import T_State
 
-from lin.service import on_command, Service as sv
+from lin.service import on_command, service_manager as sv
 from lin.log import logger
 
 from ._data_source import get_id

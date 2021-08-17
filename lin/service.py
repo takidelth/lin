@@ -2,6 +2,7 @@ import os
 import re
 import json
 from datetime import datetime
+from types import FunctionType
 from typing import Any, Dict, Set, List, Type, Tuple, Union, Optional, TYPE_CHECKING
 from pathlib import Path
 from nonebot.adapters.cqhttp.event import GroupMessageEvent, MessageEvent
@@ -14,53 +15,14 @@ from nonebot.typing import T_State, T_Handler, T_RuleChecker
 from nonebot.rule import Rule, startswith, endswith, keyword, command, shell_command, ArgumentParser, regex
 
 from lin.log import logger
-from lin.exceptions import IgnoreException
+from lin.exceptions import IgnoreException, GroupIdInvalidException, FriendIdInvalidException
 from lin.config import GocqhttpApiConfig
-from lin.utils.requests import post_bytes, post_json
+from lin.utils.requests import post_bytes
 
 SERVICE_DIR = Path(".") / "lin" / "data" / "services"
 SERVICES_DIR = SERVICE_DIR / "services"
 os.makedirs(SERVICE_DIR, exist_ok=True)
 os.makedirs(SERVICES_DIR, exist_ok=True)
-
-block_list: dict = dict()
-
-
-def _update_block_list(data: dict) -> None:
-    global block_list
-    block_list = data
-
-
-def _load_block_list() -> dict:
-    """
-    :说明:
-        
-        读取被禁止使用的用户和群组
-
-    """
-
-    file = SERVICE_DIR / "ban.json"
-    try:
-        data = json.loads(file.read_bytes())
-    except Exception:
-        data = {"user":{}, "group":{}}
-        with open(file, "w")as f:
-            f.write(json.dumps(data, indent=4))
-    return data
-
-
-def _save_block_list(data: dict) -> None:
-    """
-    :说明:
-        
-        保存被禁止使用的用户和群组
-
-    """
-    _update_block_list(data)
-
-    file = SERVICE_DIR / "ban.json"
-    with open(file, "w")as f:
-        f.write(json.dumps(data, indent=4))
 
 
 def _load_service_config(service: str, docs: str, permission: Permission) -> dict:
@@ -87,48 +49,107 @@ def _save_service_config(service: str, data: dict) -> None:
         f.write(json.dumps(data, indent=4))
 
 
-class Service:
+class ServiceManager:
     """一个集成的服务类"""
 
-    class Auth:
-        """权限管理服务"""
-        # TODO 实现按照插件 priority 属性分类默认可用插件
-        # TODO 插件的订阅化
-        pass
+
+    def __init__(self) -> None:
+        
+        self._ban_file: Path = SERVICE_DIR / "ban.json"
+
+        self._block_list: dict = self._load_block_list()
     
+
+    def save_block_list(self) -> None:
+        logger.info("正在保存 block_list...")
+        with open(self._ban_file, "w")as f:
+            f.write(json.dumps(self._block_list, indent=4))
+        logger.info("block_list 保存完成")
+
+
+    def _load_block_list(self) -> Dict[str, Dict[str, str]]:
+        try:
+            data = json.loads(self._ban_file.read_bytes())
+        except Exception:
+            data = {"user":{}, "group":{}}
+            with open(self._ban_file, "w")as f:
+                f.write(json.dumps(data, indent=4))
+        return data
+
+
+    def check_id(func: FunctionType) -> FunctionType:
+        def wapper(*args, **kwargs) -> None:
+            target_type = func.__name__.split("_")
+            self: ServiceManager = args[0]
+            target_id = args[1]
+            # 检查 id 是否已经存在
+            if target_type == "group" and self.auth_group(target_id):
+                raise GroupIdInvalidException()
+            elif target_type == "user" and self.auth_user(target_id):
+                raise FriendIdInvalidException()
+            func(*args, **kwargs)
+        return wapper
+
 
     # TODO 检查 群组 和 用户 是否存在
-    @staticmethod
-    def auth_user(user_id: str) -> bool:
-        return user_id in block_list["user"]
+    def auth_user(self, user_id: str) -> bool:
+        return user_id in self._block_list["user"]
     
 
-    @staticmethod
-    def auth_group(group_id: str) -> bool:
-        return group_id in block_list["group"]
+    def auth_group(self, group_id: str) -> bool:
+        return group_id in self._block_list["group"]
 
 
-    @staticmethod
-    def block_user(user_id: str) -> None:
-        block_list["user"][user_id] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        _save_block_list(block_list)
-
-    @staticmethod
-    def unblock_user(user_id: str) -> None:
-        block_list["user"].pop(user_id)
-        _save_block_list(block_list)
+    @check_id
+    def block_user(self, user_id: str) -> None:
+        self._block_list["user"][user_id] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
 
-    @staticmethod
-    def block_group(group_id: str) -> None:
-        block_list["group"][group_id] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        _save_block_list(block_list)
+    @check_id
+    def unblock_user(self, user_id: str) -> None:
+        self._block_list["user"].pop(user_id)
 
 
-    @staticmethod
-    def unblock_group(group_id: str) -> None:
-        block_list["group"].pop(group_id)
-        _save_block_list(block_list)
+    @check_id
+    def block_group(self, group_id: str) -> None:
+        self._block_list["group"][group_id] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+
+    @check_id
+    def unblock_group(self, group_id: str) -> None:
+        self._block_list["group"].pop(group_id)
+
+
+    @classmethod
+    async def init(cls):
+        logger.info("正在加载 block_list...")
+        cls._block_list = await cls._load_block_list()
+        await cls.block_group("123456")
+        print(cls._block_list)
+        logger.debug("block_list 加载完成")
+
+    
+    @run_preprocessor
+    async def _check_block(
+        matcher: Matcher,
+        bot: Bot,
+        event: MessageEvent,
+        state: T_State,
+        ) -> None:
+        user_id = event.get_user_id()
+        print(service_manager._block_list)
+        if service_manager.auth_user(user_id):
+            logger.info(f"Ignore user: {user_id}")
+            raise IgnoreException(f"Ignore user: {user_id}")
+      
+        if isinstance(event, GroupMessageEvent):
+            group_id = str(event.group_id)
+            if service_manager.auth_group(group_id):
+                logger.info(f"Ignore group: {group_id}")
+                raise IgnoreException(f"Ignore group: {group_id}")
+
+
+service_manager = ServiceManager()
 
 
 class GocqhttpApiServer:
@@ -525,22 +546,3 @@ def on_regex(pattern: str,
       - ``Type[Matcher]``
     """
     return on_message(regex(pattern, flags) & rule, **kwargs)
-
-@run_preprocessor
-async def _check_block(
-    matcher: Matcher,
-    bot: Bot,
-    event: MessageEvent,
-    state: T_State,
-    ) -> None:
-    user_id = event.get_user_id()
-    
-    if Service.auth_user(user_id):
-        logger.info(f"Ignore user: {user_id}")
-        raise IgnoreException(f"Ignore user: {user_id}")
-  
-    if isinstance(event, GroupMessageEvent):
-        group_id = str(event.group_id)
-        if Service.auth_group(group_id):
-            logger.info(f"Ignore group: {group_id}")
-            raise IgnoreException(f"Ignore group: {group_id}")
