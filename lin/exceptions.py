@@ -70,6 +70,10 @@ class FriendIdInvalidException(BaseBotException):
     prompt = "无效的好友 QQID"
 
 
+class PluginDisableException(BaseBotException):
+    prompt = "插件已被禁用"
+
+
 @run_postprocessor
 async def _track_error(
     matcher: Matcher,

@@ -5,19 +5,19 @@ from datetime import datetime
 from types import FunctionType
 from typing import Any, Dict, Set, List, Type, Tuple, Union, Optional, TYPE_CHECKING
 from pathlib import Path
-from nonebot.adapters.cqhttp.event import GroupMessageEvent, MessageEvent
 from nonebot.adapters import Bot, Event
 from nonebot.matcher import Matcher
 from nonebot.handler import Handler
 from nonebot.message import run_preprocessor
 from nonebot.permission import Permission, SUPERUSER
 from nonebot.typing import T_State, T_Handler, T_RuleChecker
-from nonebot.rule import Rule, startswith, endswith, keyword, command, shell_command, ArgumentParser, regex
+from nonebot.rule import Rule, startswith, endswith, keyword, shell_command, ArgumentParser, regex
 
 from lin.log import logger
 from lin.exceptions import IgnoreException, GroupIdInvalidException, FriendIdInvalidException
 from lin.config import GocqhttpApiConfig
 from lin.utils.requests import post_bytes
+from lin.rule import command
 
 SERVICE_DIR = Path(".") / "lin" / "data" / "services"
 SERVICES_DIR = SERVICE_DIR / "services"
@@ -31,26 +31,18 @@ class ServiceManager:
     _ban_file: Path = SERVICE_DIR / "ban.json"
 
     _block_list: dict
-    
-    _plugins_info: dict
 
 
-    def save_block_list() -> None:
-        logger.info("正在保存 block_list...")
-        with open(ServiceManager._ban_file, "w")as f:
-            f.write(json.dumps(ServiceManager._block_list, indent=4))
-        logger.info("block_list 保存完成")
+    @classmethod
+    def init(cls) -> None:
+        # 加载 block_list
+        cls._block_list = cls.Auth._load_block_list()
+        
 
-    
-    @staticmethod
-    def _load_block_list() -> Dict[str, Dict[str, str]]:
-        try:
-            data = json.loads(ServiceManager._ban_file.read_bytes())
-        except Exception:
-            data = {"user":{}, "group":{}}
-            with open(ServiceManager._ban_file, "w")as f:
-                f.write(json.dumps(data, indent=4))
-        return data
+    @classmethod
+    def end(cls) -> None:
+        # 保存 block_list
+        cls.Auth._save_block_list()
 
 
     def _load_service_config(service: str, docs: str, permission: Permission) -> dict:
@@ -68,77 +60,114 @@ class ServiceManager:
             }
             with open(file, "w")as f:
                 f.write(json.dumps(data, indent=4))
+        # 保存 各插件状态
+        if server_type != "admin_":
+            ServiceManager.Status._plugins_status[(data["command"]).replace("/", "")] = data["enable"]
+        # 返回插件信息
         return data
 
 
-    def _save_service_config(service: str, data: dict) -> None:
-        file = SERVICES_DIR / (service.replace("/", "") + ".json")
-        with open(file, "w")as f:
-            f.write(json.dumps(data, indent=4))
+    class Status:
+        """ 插件状态管理 """
+        
+        _plugins_status: dict = dict()
 
 
-    def check_id(func: FunctionType) -> FunctionType:
-        def wapper(*args, **kwargs) -> None:
-            target_type = func.__name__.split("_")
-            self: ServiceManager = args[0]
-            target_id = args[1]
-            # 检查 id 是否已经存在
-            if target_type == "group" and self.auth_group(target_id):
-                raise GroupIdInvalidException()
-            elif target_type == "user" and self.auth_user(target_id):
-                raise FriendIdInvalidException()
-            func(*args, **kwargs)
-        return wapper
+        @classmethod
+        def set_plugin_status(cls, serivce: str, enable: bool) -> None:
+            # 从 plugin_status 中确认 status
+            if cls._plugins_status.get(serivce, None) == None and cls._plugins_status.get(serivce) == enable:
+                return
+            # 找到 插件信息 文件更新 enable 
+            file = SERVICES_DIR / f"{serivce}.json"
+            data = json.loads(file.read_bytes())
+            data["enable"] = enable
+            with open(file, "w")as f:
+                f.write(json.dumps(data, indent=4))
+
+            cls._plugins_status[serivce] = enable
 
 
-    # TODO 检查 群组 和 用户 是否存在
-    def auth_user(user_id: str) -> bool:
-        return user_id in ServiceManager._block_list["user"]
+        @classmethod
+        def check_status(cls, service: str) -> bool:
+            # 暂未处理 没有这个服务的情况
+            return cls._plugins_status.get(service)
+
+
+        @classmethod
+        def enable(cls, service: str) -> None:
+            cls.set_plugin_status(service, True)
+
+        
+        @classmethod
+        def disable(cls, service: str) -> None:
+            cls.set_plugin_status(service, False)
     
 
-    def auth_group(group_id: str) -> bool:
-        return group_id in ServiceManager._block_list["group"]
+    class Auth:
+        """ 权限管理 """
+        def _save_block_list() -> None:
+            logger.info("正在保存 block_list...")
+            with open(ServiceManager._ban_file, "w")as f:
+                f.write(json.dumps(ServiceManager._block_list, indent=4))
+            logger.info("block_list 保存完成")
+
+        
+        @staticmethod
+        def _load_block_list() -> Dict[str, Dict[str, str]]:
+            try:
+                data = json.loads(ServiceManager._ban_file.read_bytes())
+            except Exception:
+                data = {"user":{}, "group":{}}
+                with open(ServiceManager._ban_file, "w")as f:
+                    f.write(json.dumps(data, indent=4))
+            return data
 
 
-    @check_id
-    def block_user(user_id: str) -> None:
-        ServiceManager._block_list["user"][user_id] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        def check_id(func: FunctionType) -> FunctionType:
+            """检查 id 是否存在于 block_list 中的装饰器"""
+            def wapper(*args, **kwargs) -> None:
+                target_type = func.__name__.split("_")
+                target_id = args[0]
+                # 检查 id 是否已经存在
+                print(ServiceManager.Status._plugins_status)
+                if target_type == "group" and ServiceManager.Auth.auth_group(target_id):
+                    raise GroupIdInvalidException()
+                elif target_type == "user" and ServiceManager.Auth.auth_user(target_id):
+                    raise FriendIdInvalidException()
+                # TODO 检查 id 是否存在
+                func(*args, **kwargs)
+            return wapper
 
 
-    @check_id
-    def unblock_user(user_id: str) -> None:
-        ServiceManager._block_list["user"].pop(user_id)
+        # TODO 检查 群组 和 用户 是否存在
+        def auth_user(user_id: str) -> bool:
+            return user_id in ServiceManager._block_list["user"]
+        
+
+        def auth_group(group_id: str) -> bool:
+            return group_id in ServiceManager._block_list["group"]
 
 
-    @check_id
-    def block_group(group_id: str) -> None:
-        ServiceManager._block_list["group"][group_id] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        @check_id
+        def block_user(user_id: str) -> None:
+            ServiceManager._block_list["user"][user_id] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
 
-    @check_id
-    def unblock_group(group_id: str) -> None:
-        ServiceManager._block_list["group"].pop(group_id)
+        @check_id
+        def unblock_user(user_id: str) -> None:
+            ServiceManager._block_list["user"].pop(user_id)
 
-    
-    @run_preprocessor
-    async def _check_block(
-        matcher: Matcher,
-        bot: Bot,
-        event: MessageEvent,
-        state: T_State,
-        ) -> None:
-        user_id = event.get_user_id()
 
-        if ServiceManager.auth_user(user_id):
-            logger.info(f"Ignore user: {user_id}")
-            raise IgnoreException(f"Ignore user: {user_id}")
-      
-        if isinstance(event, GroupMessageEvent):
-            group_id = str(event.group_id)
-            if ServiceManager.auth_group(group_id):
-                logger.info(f"Ignore group: {group_id}")
-                raise IgnoreException(f"Ignore group: {group_id}")
-    
+        @check_id
+        def block_group(group_id: str) -> None:
+            ServiceManager._block_list["group"][group_id] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+
+        @check_id
+        def unblock_group(group_id: str) -> None:
+            ServiceManager._block_list["group"].pop(group_id)
+
 
     def on_message(rule: Optional[Union[Rule, T_RuleChecker]] = None,
                   permission: Optional[Permission] = None,
@@ -388,7 +417,8 @@ class ServiceManager:
 
         commands = set([cmd]) | (aliases or set())
         ServiceManager._load_service_config(str(cmd), docs, kwargs.get("permission"))
-        return ServiceManager.on_message(command(*commands) & rule, handlers=handlers, **kwargs)
+        # 给 state 注入 service_name 方便运行前检查 enable
+        return ServiceManager.on_message(command(cmd.replace("/", ""), *commands) & rule, handlers=handlers, **kwargs)
 
 
     def on_shell_command(cmd: Union[str, Tuple[str, ...]],
