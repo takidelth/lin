@@ -10,7 +10,7 @@ from nonebot.adapters.cqhttp.message import Message
 
 from lin.rule import to_bot
 from lin.utils import requests
-from lin.service import on_command
+from lin.service import ServiceManager as sv
 from lin.exceptions import ApiException
 from lin.log import logger
 
@@ -28,7 +28,7 @@ __doc__ = """
   /ans <网课题目内容>
 """
 
-ans = on_command("/ans",__doc__, rule=to_bot())
+ans = sv.on_command("/ans",__doc__, rule=to_bot())
 
 
 @ans.args_parser

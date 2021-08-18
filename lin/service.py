@@ -25,56 +25,56 @@ os.makedirs(SERVICE_DIR, exist_ok=True)
 os.makedirs(SERVICES_DIR, exist_ok=True)
 
 
-def _load_service_config(service: str, docs: str, permission: Permission) -> dict:
-    server_type = "admin_" if permission == SUPERUSER else ""
-    file = SERVICES_DIR / (server_type + service.replace("/", "") + ".json")
-    try:
-        data = json.loads(file.read_bytes())
-    except Exception:
-        data = {
-            "command": service,
-            "docs": docs,
-            "enable": True,
-            "disable_user": {},
-            "disable_group": {}
-        }
-        with open(file, "w")as f:
-            f.write(json.dumps(data, indent=4))
-    return data
-
-
-def _save_service_config(service: str, data: dict) -> None:
-    file = SERVICES_DIR / (service.replace("/", "") + ".json")
-    with open(file, "w")as f:
-        f.write(json.dumps(data, indent=4))
-
-
 class ServiceManager:
     """一个集成的服务类"""
-
-
-    def __init__(self) -> None:
-        
-        self._ban_file: Path = SERVICE_DIR / "ban.json"
-
-        self._block_list: dict = self._load_block_list()
     
+    _ban_file: Path = SERVICE_DIR / "ban.json"
 
-    def save_block_list(self) -> None:
+    _block_list: dict
+    
+    _plugins_info: dict
+
+
+    def save_block_list() -> None:
         logger.info("正在保存 block_list...")
-        with open(self._ban_file, "w")as f:
-            f.write(json.dumps(self._block_list, indent=4))
+        with open(ServiceManager._ban_file, "w")as f:
+            f.write(json.dumps(ServiceManager._block_list, indent=4))
         logger.info("block_list 保存完成")
 
-
-    def _load_block_list(self) -> Dict[str, Dict[str, str]]:
+    
+    @staticmethod
+    def _load_block_list() -> Dict[str, Dict[str, str]]:
         try:
-            data = json.loads(self._ban_file.read_bytes())
+            data = json.loads(ServiceManager._ban_file.read_bytes())
         except Exception:
             data = {"user":{}, "group":{}}
-            with open(self._ban_file, "w")as f:
+            with open(ServiceManager._ban_file, "w")as f:
                 f.write(json.dumps(data, indent=4))
         return data
+
+
+    def _load_service_config(service: str, docs: str, permission: Permission) -> dict:
+        server_type = "admin_" if permission == SUPERUSER else ""
+        file = SERVICES_DIR / (server_type + service.replace("/", "") + ".json")
+        try:
+            data = json.loads(file.read_bytes())
+        except Exception:
+            data = {
+                "command": service,
+                "docs": docs,
+                "enable": True,
+                "disable_user": {},
+                "disable_group": {}
+            }
+            with open(file, "w")as f:
+                f.write(json.dumps(data, indent=4))
+        return data
+
+
+    def _save_service_config(service: str, data: dict) -> None:
+        file = SERVICES_DIR / (service.replace("/", "") + ".json")
+        with open(file, "w")as f:
+            f.write(json.dumps(data, indent=4))
 
 
     def check_id(func: FunctionType) -> FunctionType:
@@ -92,32 +92,32 @@ class ServiceManager:
 
 
     # TODO 检查 群组 和 用户 是否存在
-    def auth_user(self, user_id: str) -> bool:
-        return user_id in self._block_list["user"]
+    def auth_user(user_id: str) -> bool:
+        return user_id in ServiceManager._block_list["user"]
     
 
-    def auth_group(self, group_id: str) -> bool:
-        return group_id in self._block_list["group"]
+    def auth_group(group_id: str) -> bool:
+        return group_id in ServiceManager._block_list["group"]
 
 
     @check_id
-    def block_user(self, user_id: str) -> None:
-        self._block_list["user"][user_id] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    def block_user(user_id: str) -> None:
+        ServiceManager._block_list["user"][user_id] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
 
     @check_id
-    def unblock_user(self, user_id: str) -> None:
-        self._block_list["user"].pop(user_id)
+    def unblock_user(user_id: str) -> None:
+        ServiceManager._block_list["user"].pop(user_id)
 
 
     @check_id
-    def block_group(self, group_id: str) -> None:
-        self._block_list["group"][group_id] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    def block_group(group_id: str) -> None:
+        ServiceManager._block_list["group"][group_id] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
 
     @check_id
-    def unblock_group(self, group_id: str) -> None:
-        self._block_list["group"].pop(group_id)
+    def unblock_group(group_id: str) -> None:
+        ServiceManager._block_list["group"].pop(group_id)
 
     
     @run_preprocessor
@@ -128,14 +128,14 @@ class ServiceManager:
         state: T_State,
         ) -> None:
         user_id = event.get_user_id()
-        print(service_manager._block_list)
-        if service_manager.auth_user(user_id):
+
+        if ServiceManager.auth_user(user_id):
             logger.info(f"Ignore user: {user_id}")
             raise IgnoreException(f"Ignore user: {user_id}")
       
         if isinstance(event, GroupMessageEvent):
             group_id = str(event.group_id)
-            if service_manager.auth_group(group_id):
+            if ServiceManager.auth_group(group_id):
                 logger.info(f"Ignore group: {group_id}")
                 raise IgnoreException(f"Ignore group: {group_id}")
     
@@ -387,7 +387,7 @@ class ServiceManager:
         handlers.insert(0, _strip_cmd)
 
         commands = set([cmd]) | (aliases or set())
-        _load_service_config(str(cmd), docs, kwargs.get("permission"))
+        ServiceManager._load_service_config(str(cmd), docs, kwargs.get("permission"))
         return ServiceManager.on_message(command(*commands) & rule, handlers=handlers, **kwargs)
 
 

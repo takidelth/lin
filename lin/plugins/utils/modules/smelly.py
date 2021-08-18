@@ -1,6 +1,6 @@
 from nonebot.adapters.cqhttp import Bot, MessageEvent
 
-from lin.service import on_command
+from lin.service import ServiceManager as sv
 from lin.utils.requests import get_text
 from lin.exceptions import ApiException
 
@@ -12,7 +12,7 @@ __doc__ = """
 说明:
   此命令可能骂的很难听， 请不要不识抬举
 """
-smelly = on_command("嘴臭一下", docs=__doc__)
+smelly = sv.on_command("嘴臭一下", docs=__doc__)
 
 
 @smelly.handle()

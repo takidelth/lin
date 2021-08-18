@@ -2,7 +2,7 @@ from random import choice
 
 from nonebot.adapters.cqhttp import Bot, MessageEvent
 
-from lin.service import on_command
+from lin.service import ServiceManager as sv
 from lin.utils.requests import get_json
 
 URL = [
@@ -17,7 +17,7 @@ __doc__ = """
   hitokoto
   一言
 """
-hitokoto = on_command(
+hitokoto = sv.on_command(
     cmd="一言", aliases={"hitokoto"}, docs=__doc__
 )
 

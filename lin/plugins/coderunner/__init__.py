@@ -6,7 +6,7 @@ from nonebot.adapters.cqhttp.message import MessageSegment
 
 from lin.log import logger
 from lin.utils import requests
-from lin.service import on_command
+from lin.service import ServiceManager as sv
 from lin.exceptions import ApiException
 
 from .data_source import format_code
@@ -60,7 +60,7 @@ __doc__ = """
       return 0; 
   }
 """
-runner = on_command("/run", __doc__)
+runner = sv.on_command("/run", __doc__)
 
 
 @runner.args_parser

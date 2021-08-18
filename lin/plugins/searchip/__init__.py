@@ -6,7 +6,7 @@ from nonebot.adapters.cqhttp import Bot, MessageEvent
 from pydantic.types import Json
 
 from lin.rule import to_bot
-from lin.service import on_command
+from lin.service import ServiceManager as sv
 from lin.utils import requests
 from lin.log import logger
 from lin.exceptions import ApiException
@@ -20,7 +20,7 @@ ip 查询
   查询ip <target_ip>
   ip地址 <target_ip>
 """
-ip_serch = on_command(
+ip_serch = sv.on_command(
     cmd="/ip", docs=__doc__, aliases={"查询ip", "ip地址"}, rule=to_bot()
 )
 

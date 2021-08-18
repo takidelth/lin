@@ -12,7 +12,7 @@ from nonebot.adapters.cqhttp import Bot, Event
 from nonebot.adapters.cqhttp.message import MessageSegment
 
 from lin.log import logger
-from lin.service import on_command
+from lin.service import ServiceManager as sv
 from lin.utils.requests import get_bytes
 from lin.exceptions import ApiException
 
@@ -97,7 +97,7 @@ class GrayFace:
         return None
 
 
-    gray = on_command(cmd="gface", aliases={"黑白表情包"}, docs=__doc__)
+    gray = sv.on_command(cmd="gface", aliases={"黑白表情包"}, docs=__doc__)
 
 
     @gray.args_parser

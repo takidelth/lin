@@ -7,7 +7,7 @@ from nonebot.adapters.cqhttp.message import Message
 from nonebot.typing import T_State
 from nonebot.adapters.cqhttp import Bot, Event
 
-from lin.service import SERVICES_DIR, on_command
+from lin.service import SERVICES_DIR, ServiceManager as sv
 from lin.log import logger
 from lin.rule import to_bot
 
@@ -19,7 +19,7 @@ __doc__ = """
   /help info <帮助主体>
 """
 
-help = on_command("/help", __doc__, aliases={"帮助", "usage", "帮帮俺"}, rule=to_bot())
+help = sv.on_command("/help", __doc__, aliases={"帮助", "usage", "帮帮俺"}, rule=to_bot())
 
 
 @help.handle()

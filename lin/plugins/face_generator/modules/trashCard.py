@@ -12,7 +12,7 @@ from nonebot.adapters.cqhttp.event import Event, MessageEvent, GroupMessageEvent
 from nonebot.adapters.cqhttp.message import MessageSegment
 
 from lin.rule import to_bot
-from lin.service import on_command
+from lin.service import ServiceManager as sv
 from lin.utils.api import get_qq_avatar
 from lin.log import logger
 
@@ -155,7 +155,7 @@ class TrashCard:
         
 
     cardList = loadCardList()
-    trashCard = on_command(cmd="trashcard", aliases={"tc", "废物证"})    
+    trashCard = sv.on_command(cmd="trashcard", aliases={"tc", "废物证"})    
 
 
     @trashCard.handle()

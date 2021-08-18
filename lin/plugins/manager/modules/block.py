@@ -3,7 +3,7 @@ from nonebot.adapters.cqhttp.event import GroupMessageEvent, MessageEvent
 from nonebot.permission import SUPERUSER
 from nonebot.typing import T_State
 
-from lin.service import on_command, service_manager as sv
+from lin.service import ServiceManager as sv
 from lin.log import logger
 
 from ._data_source import get_id
@@ -15,7 +15,7 @@ __doc__ = """
 使用:
   封禁用户 <用户QQ>
 """
-block_user = on_command("封禁用户", __doc__, permission=SUPERUSER)
+block_user = sv.on_command("封禁用户", __doc__, permission=SUPERUSER)
 
 
 @block_user.args_parser
@@ -57,7 +57,7 @@ __doc__ = """
 使用:
   解封用户 <用户QQ>
 """
-unblock_user = on_command("解封用户", __doc__, permission=SUPERUSER)
+unblock_user = sv.on_command("解封用户", __doc__, permission=SUPERUSER)
 
 
 @unblock_user.args_parser
@@ -98,7 +98,7 @@ __doc__ = """
 使用:
   封禁群组 <群号>
 """
-block_group = on_command("封禁群组", __doc__, permission=SUPERUSER)
+block_group = sv.on_command("封禁群组", __doc__, permission=SUPERUSER)
 
 
 @block_group.args_parser
@@ -141,7 +141,7 @@ __doc__ = """
 使用:
   解封群组 <群号>
 """
-unblock_group = on_command("解封群组", __doc__, permission=SUPERUSER)
+unblock_group = sv.on_command("解封群组", __doc__, permission=SUPERUSER)
 
 
 @unblock_group.args_parser

@@ -3,7 +3,7 @@ import nonebot
 from pydantic.errors import DecimalError
 
 from lin.log import logger
-from lin.service import SERVICES_DIR, service_manager as sv
+from lin.service import SERVICES_DIR, ServiceManager as sv
 
 PLUGIN_INFO_DIR = SERVICES_DIR
 

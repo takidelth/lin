@@ -14,7 +14,7 @@ from nonebot.adapters.cqhttp import Bot
 from nonebot.adapters.cqhttp.event import MessageEvent
 from nonebot.adapters.cqhttp.message import MessageSegment
 
-from lin.service import on_command
+from lin.service import ServiceManager as sv
 
 SRC_PATH = Path(__file__).parent / "src"
 IMG_PATH = Path(__file__).parent / "img/ph"
@@ -83,7 +83,7 @@ async def ph_generator(text1, text2):
     im.save(str(IMG_PATH / 'ph.png'))
 
 
-ph = on_command("ph", docs=__doc__)
+ph = sv.on_command("ph", docs=__doc__)
 
 
 @ph.handle()

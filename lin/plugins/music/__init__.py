@@ -3,7 +3,7 @@ from nonebot.adapters.cqhttp.message import MessageSegment, Message
 from nonebot.typing import T_State
 
 from lin.log import logger
-from lin.service import on_command, regex
+from lin.service import ServiceManager as sv
 
 from .data_source import MusicParse
 
@@ -19,7 +19,7 @@ __doc__ = """
   链接可以是 歌单 也可以是 单曲
 """
 
-music = on_command("music", __doc__)
+music = sv.on_command("music", __doc__)
 
 
 @music.args_parser
