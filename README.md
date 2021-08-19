@@ -1,4 +1,14 @@
-# <center>lin
+
+# <center>QQBot lin</center>
+<div align="center">
+
+![maven](https://img.shields.io/badge/python-3.8%2B-blue)
+![maven](https://img.shields.io/badge/nonebot-2.0.0-yellow)
+![maven](https://img.shields.io/badge/go--cqhttp-v1.0.0--beta5-red)
+
+</div>
+
+
 
 <br>
 
@@ -20,6 +30,26 @@
 
 ## 功能列表
 <details>
+<summary>已实现的功能</summary>
+
+### 常用功能
+- [x] 运行代码 目前支持 `cpp` `c` `py2` `py3` `R` `kotlin` `java`
+- [x] 网易 & QQ 音乐 单曲 『封面』 『歌词』 『歌手』 和部分 『音乐资源』 获取
+- [x] 搜索 ip 
+- [x] 搜索网课答案
+- [x] 获取帮助
+- [x] 检查服务器状态
+- [x] 一言 (hitokoto)
+- [x] 黑白图片生成
+- [x] 废物证生成 [trashCard](https://github.com/djkcyl/trashCard)
+- [x] ph_generator 风格图片 生成 (搬运自群友的插件)
+
+<br>
+
+
+### 管理员功能
+- [x] 拉黑 & 解除拉黑 （用户 | 群组） 使其不能再使用任何插件
+- [ ] 打开 & 关闭 插件  
 
 </details>
 
@@ -27,15 +57,10 @@
 
 ## TODO
 
- - [x] 权限 和 插件 的动态管理
- - [x] 定时发送服务器状态插件
- - [x] 复读打断功能  (正在考虑要不要删除)
- - [x] hitokoto(一言)
- - [x] 灰白表情包生成插件
+ - [ ] setu （待定...）
+ - [ ] 好友 和 入群 申请通知**管理员**来判断是否同意入群
  - [ ] 回复指定消息撤回
  - [ ] 入群欢迎功能
- - [ ] 表情包生成功能 （基于 PIL 参考 A60佬的 废物证生成）
- - [ ] 插件商店形式的 功能订阅
  - [ ] 漂流瓶功能
  - [ ] news 功能
  - [-] 图片美图分类上传功能 （有空传两张积累自己的图库）暂时鸽了
@@ -48,3 +73,18 @@
  - [NoneBot/NoneBot2](https://github.com/nonebot/nonebot2)
  - [Kyomotoi/ATRI](https://github.com/Kyomotoi/ATRI)
  - [djkcyl/trashCard](https://github.com/djkcyl/trashCard)
+
+
+<br>
+
+
+## 更新日志
+
+<br>
+
+### 2021-8-18
+
+ - 增加 权限插件的**权限管理**和插件**状态管理**
+
+
+<br>
