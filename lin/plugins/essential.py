@@ -1,6 +1,7 @@
 from _typeshed import WriteableBuffer
 import os
 import json
+from re import sub
 import shutil
 import nonebot
 from pathlib import Path
@@ -112,7 +113,39 @@ async def _request_friend_event(bot: Bot, event: FriendRequestEvent) -> None:
         f"收到一个好友请求主人快来看下\n"
         f"发送者: {event.user_id}\n"
         f"消息内容: {event.comment}\n"
-        f"请求代码: {event.flag}"
+        f"请求编号: {event.flag}"
+    )
+    for superuser in BotSelfConfig.superusers:
+        await gh.send_private_msg(user_id=superuser, message=repo)
+
+
+request_group_event = sv.on_request()
+
+
+@request_group_event.handle()
+async def _request_group_event(bot: Bot, event: GroupRequestEvent) -> None:
+    file = ESSENTIAL_DIR / "request_group.json"
+    try:
+        data = json.loads(file.read_bytes())
+    except:
+        data = dict()
+    sub_type = "加群" if event.sub_type == "add" else "被邀请加群" 
+    data[event.flag] = {
+        "group_id": event.group_id,
+        "user_id": event.user_id,
+        "comment": event.comment,
+        "sub_type": sub_type
+    }
+    try:
+        with open(file, "w")as f:
+            f.write(json.dumps(data, indent=4))
+    except WriteError:
+        raise WriteError("request_group.json write failed")
+    repo = (
+        f"主人收到一条{sub_type}请求 快来看看\n"
+        f"发送者: {event.user_id}\n",
+        f"目标群组: {event.group_id}\n"
+        f"请求编号: {event.flag}"
     )
     for superuser in BotSelfConfig.superusers:
         await gh.send_private_msg(user_id=superuser, message=repo)
