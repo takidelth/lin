@@ -91,7 +91,7 @@ class ServiceManager:
         @classmethod
         def check_status(cls, service: str) -> bool:
             # 暂未处理 没有这个服务的情况
-            return cls._plugins_status.get(service)
+            return cls._plugins_status.get(service, True)
 
 
         @classmethod

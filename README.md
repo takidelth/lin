@@ -2,9 +2,9 @@
 # <center>QQBot lin</center>
 <div align="center">
 
-![maven](https://img.shields.io/badge/python-3.8%2B-blue)
-![maven](https://img.shields.io/badge/nonebot-2.0.0-yellow)
-![maven](https://img.shields.io/badge/go--cqhttp-v1.0.0--beta5-red)
+![maven](https://img.shields.io/badge/python-3.8%2B-blue?logo=appveyor&style=for-the-badge)
+![maven](https://img.shields.io/badge/nonebot-2.0.0-yellow?logo=appveyor&style=for-the-badge)
+![maven](https://img.shields.io/badge/go--cqhttp-v1.0.0--beta5-red?logo=appveyor&style=for-the-badge)
 
 </div>
 
@@ -63,6 +63,7 @@
  - [ ] 入群欢迎功能
  - [ ] 漂流瓶功能
  - [ ] news 功能
+ - [ ] 鲁迅说 （from [HibiKier/zhenxun_bot](https://github.com/HibiKier/zhenxun_bot)）
  - [-] 图片美图分类上传功能 （有空传两张积累自己的图库）暂时鸽了
  
 
@@ -73,6 +74,7 @@
  - [NoneBot/NoneBot2](https://github.com/nonebot/nonebot2)
  - [Kyomotoi/ATRI](https://github.com/Kyomotoi/ATRI)
  - [djkcyl/trashCard](https://github.com/djkcyl/trashCard)
+ - [HibiKier/zhenxun_bot](https://github.com/HibiKier/zhenxun_bot)
 
 
 <br>

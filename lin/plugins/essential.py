@@ -5,7 +5,8 @@ from nonebot.matcher import Matcher
 from nonebot.adapters.cqhttp import Bot
 from nonebot.adapters.cqhttp.event import (
     MessageEvent,
-    GroupMessageEvent
+    GroupMessageEvent,
+    LuckyKingNotifyEvent
 )
 from nonebot.message import run_preprocessor
 
