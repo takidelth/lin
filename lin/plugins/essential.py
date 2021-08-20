@@ -1,4 +1,3 @@
-from _typeshed import WriteableBuffer
 import os
 import json
 from re import sub

@@ -15,7 +15,7 @@ __doc__ = """
 使用:
   @凌 state
 """
-state = sv.on_command("state", docs=__dict__, rule=to_bot())
+state = sv.on_command("state", docs=__doc__, rule=to_bot())
 
 
 @state.handle()
