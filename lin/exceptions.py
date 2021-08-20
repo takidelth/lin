@@ -74,6 +74,10 @@ class PluginDisableException(BaseBotException):
     prompt = "插件已被禁用"
 
 
+class WriteError(BaseBotException):
+    prompt = "文件写入失败"
+
+
 @run_postprocessor
 async def _track_error(
     matcher: Matcher,

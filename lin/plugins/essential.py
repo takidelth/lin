@@ -1,20 +1,41 @@
+from _typeshed import WriteableBuffer
+import os
+import json
 import shutil
 import nonebot
+from pathlib import Path
 from nonebot.typing import T_State
 from nonebot.matcher import Matcher
 from nonebot.adapters.cqhttp import Bot
 from nonebot.adapters.cqhttp.event import (
     MessageEvent,
+    LuckyKingNotifyEvent,
     GroupMessageEvent,
-    LuckyKingNotifyEvent
+    GroupRequestEvent,
+    GroupUploadNoticeEvent,
+    GroupRecallNoticeEvent,
+    GroupIncreaseNoticeEvent,
+    GroupDecreaseNoticeEvent,
+    GroupAdminNoticeEvent,
+    GroupBanNoticeEvent,
+    FriendRequestEvent
 )
 from nonebot.message import run_preprocessor
 
 from lin.log import logger
+from lin.config import BotSelfConfig
 from lin.service import SERVICES_DIR, ServiceManager as sv
-from lin.exceptions import IgnoreException, PluginDisableException
+from lin.service import GocqhttpApiServer as gh
+from lin.exceptions import (
+    IgnoreException, 
+    PluginDisableException, 
+    WriteError
+)
 
 PLUGIN_INFO_DIR = SERVICES_DIR
+ESSENTIAL_DIR = Path(".") / "lin" / "data" / "essential"
+os.makedirs(ESSENTIAL_DIR, exist_ok=True)
+
 
 driver = nonebot.get_driver()
 
@@ -67,3 +88,31 @@ async def _check_enable(
     if not sv.Status.check_status(service_name):
         logger.error(f"插件 {service_name} 已被禁用 可能是正在维护中哦")
         raise PluginDisableException(f"插件 {service_name} 已被禁用 可能是正在维护中哦")
+
+
+request_friend_event = sv.on_request()
+
+
+@request_friend_event.handle()
+async def _request_friend_event(bot: Bot, event: FriendRequestEvent) -> None:
+    file = ESSENTIAL_DIR / "request_friend.json"
+    try:
+        data = json.loads(file.read_bytes())
+    except:
+        data = dict()
+    data[event.flag] = {"user_id": event.user_id, "comment": event.comment}
+    
+    try:
+        with open(file, "w")as f:
+            f.write(json.dumps(data, indent=4))
+    except WriteError:
+        raise WriteError("request_friend.json write failed")
+
+    repo = (
+        f"收到一个好友请求主人快来看下\n"
+        f"发送者: {event.user_id}\n"
+        f"消息内容: {event.comment}\n"
+        f"请求代码: {event.flag}"
+    )
+    for superuser in BotSelfConfig.superusers:
+        await gh.send_private_msg(user_id=superuser, message=repo)
