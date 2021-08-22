@@ -9,6 +9,7 @@ from nonebot.matcher import Matcher
 from nonebot.adapters.cqhttp import Bot
 from nonebot.adapters.cqhttp.event import (
     MessageEvent,
+    FriendRecallNoticeEvent,
     LuckyKingNotifyEvent,
     GroupMessageEvent,
     GroupRequestEvent,
@@ -84,8 +85,8 @@ async def _check_block(
 async def _check_enable(
     matcher: Matcher, bot: Bot, event: MessageEvent, state: T_State
 ) -> None:
-    service_name = state["_service_name"]
-    if not sv.Status.check_status(service_name):
+    service_name = state.get("_service_name")
+    if service_name and not sv.Status.check_status(service_name):
         logger.error(f"插件 {service_name} 已被禁用 可能是正在维护中哦")
         raise PluginDisableException(f"插件 {service_name} 已被禁用 可能是正在维护中哦")
 
@@ -145,6 +146,45 @@ async def _request_group_event(bot: Bot, event: GroupRequestEvent) -> None:
         f"发送者: {event.user_id}\n",
         f"目标群组: {event.group_id}\n"
         f"请求编号: {event.flag}"
+    )
+    for superuser in BotSelfConfig.superusers:
+        await gh.send_private_msg(user_id=superuser, message=repo)
+
+
+group_recall_event = sv.on_notice()
+
+
+@group_recall_event.handle()
+async def _group_recall_event(bot: Bot, event: GroupRecallNoticeEvent) -> None:
+    # 暂时不做存储
+    msg_id = event.message_id
+    msg = await bot.get_msg(message_id=msg_id)
+    group_name = (await bot.get_group_info(group_id=event.group_id))["group_name"]
+    repo = (
+        f"主人主人我收到一条好康的消息发给你\n"
+        f"message_id: {msg_id}\n"
+        f"time: {msg['time']}:\n"
+        f"from: {group_name}({event.group_id}) -->{event.user_id}\n"
+        f"msg：{msg['raw_message']}"
+    )
+    for superuser in BotSelfConfig.superusers:
+        await gh.send_private_msg(user_id=superuser, message=repo)
+
+
+friend_recall_event = sv.on_notice()
+
+
+@friend_recall_event.handle()
+async def _friend_recall_event(bot: Bot, event: FriendRecallNoticeEvent) -> None:
+    # 暂时不做存储
+    msg_id = event.message_id
+    msg = await bot.get_msg(message_id=msg_id)
+    repo = (
+        f"主人主人我收到一条好康的消息发给你\n"
+        f"message_id: {msg_id}\n"
+        f"time: {msg['time']}:\n"
+        f"from: {event.user_id}\n"
+        f"msg：{msg['raw_message']}"
     )
     for superuser in BotSelfConfig.superusers:
         await gh.send_private_msg(user_id=superuser, message=repo)
