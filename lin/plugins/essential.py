@@ -13,15 +13,14 @@ from nonebot.adapters.cqhttp.event import (
     LuckyKingNotifyEvent,
     GroupMessageEvent,
     GroupRequestEvent,
-    GroupUploadNoticeEvent,
     GroupRecallNoticeEvent,
     GroupIncreaseNoticeEvent,
     GroupDecreaseNoticeEvent,
-    GroupAdminNoticeEvent,
     GroupBanNoticeEvent,
     FriendRequestEvent
 )
 from nonebot.message import run_preprocessor
+from nonebot.adapters.cqhttp.message import MessageSegment
 
 from lin.log import logger
 from lin.config import BotSelfConfig
@@ -115,8 +114,7 @@ async def _request_friend_event(bot: Bot, event: FriendRequestEvent) -> None:
         f"消息内容: {event.comment}\n"
         f"请求编号: {event.flag}"
     )
-    for superuser in BotSelfConfig.superusers:
-        await gh.send_private_msg(user_id=superuser, message=repo)
+    await gh.send_to_superusers(repo)
 
 
 request_group_event = sv.on_request()
@@ -147,7 +145,7 @@ async def _request_group_event(bot: Bot, event: GroupRequestEvent) -> None:
         f"目标群组: {event.group_id}\n"
         f"请求编号: {event.flag}"
     )
-    gh.send_to_superusers(repo)
+    await gh.send_to_superusers(repo)
 
 
 group_recall_event = sv.on_notice()
@@ -159,14 +157,15 @@ async def _group_recall_event(bot: Bot, event: GroupRecallNoticeEvent) -> None:
     msg_id = event.message_id
     msg = await bot.get_msg(message_id=msg_id)
     group_name = (await bot.get_group_info(group_id=event.group_id))["group_name"]
+    user_nike = (await bot.get_group_member_info(group_id=event.group_id, user_id=event.user_id))["nickname"]
     repo = (
         f"主人主人我收到一条好康的消息发给你\n"
         f"message_id: {msg_id}\n"
         f"time: {msg['time']}:\n"
-        f"from: {group_name}({event.group_id}) -->{event.user_id}\n"
+        f"from: {group_name}({event.group_id}) --> {user_nike}({event.user_id})\n"
         f"msg：{msg['raw_message']}"
     )
-    gh.send_to_superusers(repo)
+    await gh.send_to_superusers(repo)
 
 
 friend_recall_event = sv.on_notice()
@@ -184,7 +183,7 @@ async def _friend_recall_event(bot: Bot, event: FriendRecallNoticeEvent) -> None
         f"from: {event.user_id}\n"
         f"msg：{msg['raw_message']}"
     )
-    gh.send_to_superusers(repo)
+    await gh.send_to_superusers(repo)
 
 
 group_ban_event = sv.on_notice()
@@ -199,4 +198,23 @@ async def _group_ban_event(bot: Bot, event: GroupBanNoticeEvent) -> None:
     repo = (
         f"主人我在 {group_name}({group_id})被口球了 TvT"
     )
-    gh.send_to_superusers(repo)
+    await gh.send_to_superusers(repo)
+
+
+group_decrease_event = sv.on_notice()
+
+
+@group_decrease_event.handle()
+async def _group_decrease_event(bot: Bot, event: GroupDecreaseNoticeEvent) -> None:
+    user_nike = (await bot.get_group_member_info(group_id=event.group_id, user_id=event.user_id))["nickname"]
+    await group_decrease_event.finish(f"{user_nike} 离开了")
+
+
+group_increase_event = sv.on_notice()
+
+
+@group_increase_event.handle()
+async def _group_increase_event(bot: Bot, event: GroupIncreaseNoticeEvent) -> None:
+    # TODO 暂时不考虑欢迎消息追加 头像
+    repo = "欢迎新人 " + MessageSegment.at(event.user_id)
+    await group_increase_event.finish(repo)
