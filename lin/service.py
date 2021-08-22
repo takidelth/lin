@@ -14,8 +14,8 @@ from nonebot.typing import T_State, T_Handler, T_RuleChecker
 from nonebot.rule import Rule, startswith, endswith, keyword, shell_command, ArgumentParser, regex
 
 from lin.log import logger
-from lin.exceptions import IgnoreException, GroupIdInvalidException, FriendIdInvalidException
-from lin.config import GocqhttpApiConfig
+from lin.exceptions import GroupIdInvalidException, FriendIdInvalidException
+from lin.config import GocqhttpApiConfig, BotSelfConfig
 from lin.utils.requests import post_bytes
 from lin.rule import command
 
@@ -547,6 +547,7 @@ class GocqhttpApiServer:
     @classmethod
     async def send_msg(
         cls,
+        *,
         message_type: Optional[str] = "", 
         user_id: Optional[int] = None, 
         group_id: Optional[int] = None, 
@@ -568,3 +569,15 @@ class GocqhttpApiServer:
         result = json.loads(await post_bytes(url, params=params))
         logger.debug(result)
         return result
+    
+
+    @classmethod
+    async def send_to_superusers(
+        cls, message = Union[str], auto_escape: bool = False
+    ) -> None:
+        for superuser in BotSelfConfig.superusers:
+            await cls.send_private_msg(
+                                  message=message, 
+                                  user_id=superuser, 
+                                  auto_escape=auto_escape
+                                  )

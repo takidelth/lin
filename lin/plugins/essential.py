@@ -147,8 +147,7 @@ async def _request_group_event(bot: Bot, event: GroupRequestEvent) -> None:
         f"目标群组: {event.group_id}\n"
         f"请求编号: {event.flag}"
     )
-    for superuser in BotSelfConfig.superusers:
-        await gh.send_private_msg(user_id=superuser, message=repo)
+    gh.send_to_superusers(repo)
 
 
 group_recall_event = sv.on_notice()
@@ -167,8 +166,7 @@ async def _group_recall_event(bot: Bot, event: GroupRecallNoticeEvent) -> None:
         f"from: {group_name}({event.group_id}) -->{event.user_id}\n"
         f"msg：{msg['raw_message']}"
     )
-    for superuser in BotSelfConfig.superusers:
-        await gh.send_private_msg(user_id=superuser, message=repo)
+    gh.send_to_superusers(repo)
 
 
 friend_recall_event = sv.on_notice()
@@ -186,5 +184,19 @@ async def _friend_recall_event(bot: Bot, event: FriendRecallNoticeEvent) -> None
         f"from: {event.user_id}\n"
         f"msg：{msg['raw_message']}"
     )
-    for superuser in BotSelfConfig.superusers:
-        await gh.send_private_msg(user_id=superuser, message=repo)
+    gh.send_to_superusers(repo)
+
+
+group_ban_event = sv.on_notice()
+
+
+@group_ban_event.handle()
+async def _group_ban_event(bot: Bot, event: GroupBanNoticeEvent) -> None:
+    if not event.is_tome():
+        return
+    group_id = event.group_id
+    group_name = (await bot.get_group_info(group_id=group_id))["group_name"]
+    repo = (
+        f"主人我在 {group_name}({group_id})被口球了 TvT"
+    )
+    gh.send_to_superusers(repo)
