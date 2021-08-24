@@ -91,6 +91,7 @@ async def _ph_handle(bot: Bot, event: MessageEvent) -> None:
     msg = str(event.message).split(" ")
     if 2 < len(msg) > 2 :
         await ph.finish("非法参数")
+        return
     
     await ph_generator(*msg)
     repo = MessageSegment.image(file=f"file://{str(IMG_PATH / 'ph.png')}")

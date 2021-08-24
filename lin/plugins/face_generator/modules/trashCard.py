@@ -26,14 +26,14 @@ __doc__ = """
 此功能基于 A60佬 的源码基础进行了修改 
 源项目地址： https://github.com/djkcyl/trashCard
 使用：
-  trashcard
-  tc
-  废物证
-  
-  换新:
-  trashcard 换新
-  tc 换新
-  废物证 换新
+    trashcard
+    tc
+    废物证
+    
+    换新:
+    trashcard 换新
+    tc 换新
+    废物证 换新
 
 """ + str(MessageSegment.image(f"file://{str(IMG_PATH / 'temp.png')}"))
 

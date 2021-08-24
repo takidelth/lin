@@ -1,6 +1,5 @@
 import os
 import json
-from re import sub
 import shutil
 import nonebot
 from pathlib import Path
@@ -23,7 +22,6 @@ from nonebot.message import run_preprocessor
 from nonebot.adapters.cqhttp.message import MessageSegment
 
 from lin.log import logger
-from lin.config import BotSelfConfig
 from lin.service import SERVICES_DIR, ServiceManager as sv
 from lin.service import GocqhttpApiServer as gh
 from lin.exceptions import (
@@ -31,6 +29,7 @@ from lin.exceptions import (
     PluginDisableException, 
     WriteError
 )
+
 
 PLUGIN_INFO_DIR = SERVICES_DIR
 ESSENTIAL_DIR = Path(".") / "lin" / "data" / "essential"
