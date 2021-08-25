@@ -23,10 +23,10 @@ os.makedirs(IMG_PATH, exist_ok=True)
 __doc__ = """
 ph 风格图片生成
 使用:
-  ph <text1> <text2>
+    ph <text1> <text2>
 
 例子:
-  ph pxxx hub
+    ph pxxx hub
 
 结果:
 """ + str(MessageSegment.image(f"file://{str(IMG_PATH / 'temp.png')}"))
@@ -89,9 +89,9 @@ ph = sv.on_command("ph", docs=__doc__)
 @ph.handle()
 async def _ph_handle(bot: Bot, event: MessageEvent) -> None:
     msg = str(event.message).split(" ")
-    if 2 < len(msg) > 2 :
+    if len(msg) > 2 or len(msg) < 2:
         await ph.finish("非法参数")
-        return
+        return 
     
     await ph_generator(*msg)
     repo = MessageSegment.image(file=f"file://{str(IMG_PATH / 'ph.png')}")

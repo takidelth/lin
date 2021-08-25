@@ -23,12 +23,12 @@ os.makedirs(IMG_PATH, exist_ok=True)
 __doc__ = """
 黑白表情包生成
 使用:
-  gface <表情> <底部的文字>
+    gface <表情> <底部的文字>
 
-  或者
-  
-  gface [根据提示发送图片和文字]
-  
+    或者
+    
+    gface [根据提示发送图片和文字]
+    
 注: [] 方括号里的内容为提示信息并非参数说明
 """ + str(MessageSegment.image(f"file://{str(IMG_PATH / 'temp.png')}"))
 
