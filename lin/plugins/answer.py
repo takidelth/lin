@@ -1,7 +1,7 @@
 """
     :说明:
-      此插件使用的 ``API`` 是 Tampermonkey 的 "超星王珂住手(改)(查题可用)" 脚本的接口
-      https://bbs.tampermonkey.net.cn/forum.php?mod=viewthread&tid=15
+        此插件使用的 ``API`` 是 Tampermonkey 的 "超星王珂住手(改)(查题可用)" 脚本的接口
+        https://bbs.tampermonkey.net.cn/forum.php?mod=viewthread&tid=15
 """
 
 from nonebot.typing import T_State
@@ -23,12 +23,12 @@ headers = {
 
 __doc__ = """
 说明:
-  获取 超星网课 答案
+    获取 超星网课 答案
 使用:
-  /ans <网课题目内容>
+    /ans <网课题目内容>
 """
 
-ans = sv.on_command("/ans",__doc__, rule=to_bot())
+ans = sv.on_command("/ans", __doc__)
 
 
 @ans.args_parser
@@ -69,5 +69,5 @@ async def _reply_question(bot: Bot, event: Event, state: T_State) -> None:
         repo = f"[CQ:at,qq={user_id}] {ans_data}"
         await ans.finish(Message(repo))
     else:
-        ans.finish("题库中没有找到此题答案")
+        await ans.finish("题库中没有找到此题答案")
         

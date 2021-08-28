@@ -13,7 +13,7 @@ from lin.service import ServiceManager as sv
 __doc__ = """
 检测服务器状态
 使用:
-  @凌 state
+    @凌 state
 """
 state = sv.on_command("state", docs=__doc__, rule=to_bot())
 

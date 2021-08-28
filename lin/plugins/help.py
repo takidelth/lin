@@ -14,9 +14,9 @@ from lin.rule import to_bot
 __doc__ = """
 帮助
 使用:
-  /help
-  /help list 获取命令列表
-  /help info <帮助主体>
+    /help
+    /help list 获取命令列表
+    /help info <帮助主体>
 """
 
 help = sv.on_command("/help", __doc__, aliases={"帮助", "usage", "帮帮俺"}, rule=to_bot())

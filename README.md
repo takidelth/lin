@@ -9,26 +9,70 @@
 </div>
 
 
-
 <br>
+
 
 ## 简介
 一个基于 [go-cqhttp](https://github.com/Mrs4s/go-cqhttp) 和 [nonebot2](https://github.com/nonebot/nonebot2) 的 QQ 机器人, 插件以外的大部分代码都~~借鉴~~（搬运）于 [ATRI](https://github.com/Kyomotoi/ATRI) 
 
-<br>
-
-## 声明
-此项目仅用于学习交流， 请勿用于非法用途
 
 <br>
+
 
 ## 项目特色
 
 ~~那当然是毫无特色~~
 
+
 <br>
 
+
+## 快速上手
+
+<details>
+<summary>启动</summary>
+~~先这样这样然后再那样那样~~(正在更新)
+</details>
+
+
+<details>
+<summary>配置文件说明</summary>
+
+```yml
+BotSelfConfig:
+  host: "127.0.0.1"
+  port: 8765        # 监听端口 和 gocqhttp 保持一致
+  debug: false      # debug 模式
+  superusers: ["1037447217"]    # 管理员 qq 号列表可添加多个账号
+  nickname: ["凌", "ling", "lin"]   # 昵称
+  command_start: [""]       # 命令起始字符
+  command_sep: ["."]        # 命令分隔符
+  session_expire_timeout: 60
+
+OtherPluginsConfig:
+  plugin_ipypreter_image: "latest"      # ipypreter 插件配置 暂时可以忽略
+
+GocqhttpApiConfig:
+  host: "127.0.0.1"     # gocqhttp 运行的地址 （默认本机）
+  port: 5700            # gocqhttp http 模式运行的端口
+
+```
+
+</details>
+
+
+<br>
+
+
+## 声明
+此项目仅用于学习交流， 请勿用于非法用途
+
+
+<br>
+
+
 ## 功能列表
+
 <details>
 <summary>已实现的功能</summary>
 
@@ -50,27 +94,36 @@
 - [x] 有群员退出时发送群消息
 - [x] 入群欢迎
 - [x] 男同关注了你
+- [x] 我朋友想...
+
 
 <br>
+
 
 ### 管理员功能
 - [x] 拉黑 & 解除拉黑 （用户 | 群组） 使其不能再使用任何插件
 - [ ] 打开 & 关闭 插件  
 
+
 </details>
+
 
 <br>
 
+
 ## TODO
+
  - [ ] setu （待定...）
  - [ ] 回复指定消息撤回
  - [ ] 漂流瓶功能
  - [ ] news 功能
  - [ ] 鲁迅说 （from [HibiKier/zhenxun_bot](https://github.com/HibiKier/zhenxun_bot)）
+ - [ ] pixiv 日榜
  - [-] 图片美图分类上传功能 （有空传两张积累自己的图库）暂时鸽了
- - [ ] 我朋友想...
+
 
 <br>
+
 
 ## 感谢
  - [Mrs4s/go-cqhttp](https://github.com/Mrs4s/go-cqhttp)
@@ -85,13 +138,35 @@
 
 ## 更新日志
 
+
 <br>
+
+
+### 2021-8-28
+
+ - 调整 插件目录下单个 `__init__.py` 文件构成的插件移动至 `plugins` 目录下 
+ - 调整 部分插件 `User-Agent` 获取方式 
+ - 调整 部分插件**使用说明**
+
+
+<br>
+
+
+### 2021-8-25
+
+ - 增加 我的朋友... 图片生成
+
+
+<br>
+
 
 ### 2021-8-24
 
  - 增加 "男同关注了你" 图片生成
 
+
 <br>
+
 
 ### 2021-8-22
 
@@ -101,14 +176,18 @@
  - 增加 新的消息群发管理员 API
  - 增加 入群欢迎
 
+
 <br>
+
 
 ### 2021-8-20
  - 增加 入群请求和邀请入群请求通知自动通知**管理员**
  - 增加 好友请求自动通知**管理员**
  - 增加 主动触发发送服务器状态
 
+
 <br>
+
 
 ### 2021-8-18
 

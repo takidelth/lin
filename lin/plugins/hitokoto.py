@@ -14,8 +14,8 @@ URL = [
 __doc__ = """
 一言
 使用:
-  hitokoto
-  一言
+    hitokoto
+    一言
 """
 hitokoto = sv.on_command(
     cmd="一言", aliases={"hitokoto"}, docs=__doc__

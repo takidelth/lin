@@ -1,19 +1,17 @@
-from os import stat
 from nonebot.typing import T_State
 from nonebot.adapters.cqhttp import Bot
 from nonebot.adapters.cqhttp.event import MessageEvent
-from nonebot.adapters.cqhttp.message import MessageSegment
 
-from lin.log import logger
-from lin.utils import requests
+from lin.utils.requests import post_json, get_ua 
 from lin.service import ServiceManager as sv
 from lin.exceptions import ApiException
 
 from .data_source import format_code
 
-API_URL = "https://tool.runoob.com/compile2.php"
 
-HEADERS = {"user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.164 Safari/537.36"}
+API_URL = "https://tool.runoob.com/compile2.php"
+HEADERS = {"user-agent": get_ua()}
+
 
 LANGUAGE = {
     "R": [["R", "r", "R语言", "R 语言"], 80],
@@ -25,40 +23,41 @@ LANGUAGE = {
     "py": [["py", "py2", "python2"], 0],
 }
 
+
 __doc__ = """
 代码执行
 使用:
-  ------
-  /run <语言>
-  [--stdin=] 
-  <code>
-  ------
+    ------
+    /run <语言>
+    [--stdin=] 
+    <code>
+    ------
 
-  <> 表示必选
-  [] 表示可选
+    <> 表示必选
+    [] 表示可选
 
 支持语言如下:
-  『r』
-  『kotlin』
-  『java』
-  『cpp』
-  『C』
-  『py3』
-  『py2』
+    『r』
+    『kotlin』
+    『java』
+    『cpp』
+    『C』
+    『py3』
+    『py2』
 示例:
-  /run cpp
-  --stdin=Hello World
-  #include <iostream>
-  
-  int main() {
-      char str[12];
+    /run cpp
+    --stdin=Hello World
+    #include <iostream>
+    
+    int main() {
+        char str[12];
 
-      std::cin >> str;
-      
-      std::cout << str;
-      
-      return 0; 
-  }
+        std::cin >> str;
+        
+        std::cout << str;
+        
+        return 0; 
+    }
 """
 runner = sv.on_command("/run", __doc__)
 
@@ -115,7 +114,7 @@ async def _run_code(bot: Bot, event: MessageEvent, state: T_State) -> None:
     }
 
     try:
-        result = await requests.post_json(API_URL, headers=HEADERS, data=form_data)
+        result = await post_json(API_URL, headers=HEADERS, data=form_data)
     except:
         ApiException("菜鸟在线编辑器 API 请求时发生错误")
     

@@ -7,17 +7,19 @@ from lin.service import ServiceManager as sv
 
 from .data_source import MusicParse
 
+
 __doc__ = """
 音乐解析插件:
-  目前支持网易和QQ音乐解析
+    目前支持网易和QQ音乐解析
 使用方式：
-  发送指令: music <你的音乐链接>
+    发送指令: music <你的音乐链接>
 或者
-  发送命令: music 后再向机器人分享你的链接
+    发送命令: music 后再向机器人分享你的链接
 
 说明:
-  链接可以是 歌单 也可以是 单曲
+    链接可以是 歌单 也可以是 单曲
 """
+
 
 music = sv.on_command("music", __doc__)
 

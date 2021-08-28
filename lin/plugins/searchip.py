@@ -11,15 +11,19 @@ from lin.utils import requests
 from lin.log import logger
 from lin.exceptions import ApiException
 
+
 API_URL = "https://ip.taobao.com/outGetIpInfo"
+
 
 __doc__ = """
 ip 查询
 使用:
-  /ip <target_ip>
-  查询ip <target_ip>
-  ip地址 <target_ip>
+    /ip <target_ip>
+    查询ip <target_ip>
+    ip地址 <target_ip>
 """
+
+
 ip_serch = sv.on_command(
     cmd="/ip", docs=__doc__, aliases={"查询ip", "ip地址"}, rule=to_bot()
 )
