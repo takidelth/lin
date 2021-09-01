@@ -21,7 +21,7 @@
 
 ## 项目特色
 
-~~那当然是毫无特色~~
+~~那当然是毫无特色~~，本项目未经过严格的测试尚有很多的 `BUG` （裂开）
 
 
 <br>
@@ -95,6 +95,7 @@ GocqhttpApiConfig:
 - [x] 入群欢迎
 - [x] 男同关注了你
 - [x] 我朋友想...
+- [x] news 功能
 
 
 <br>
@@ -116,9 +117,9 @@ GocqhttpApiConfig:
  - [ ] setu （待定...）
  - [ ] 回复指定消息撤回
  - [ ] 漂流瓶功能
- - [ ] news 功能
  - [ ] 鲁迅说 （from [HibiKier/zhenxun_bot](https://github.com/HibiKier/zhenxun_bot)）
  - [ ] pixiv 日榜
+ - [ ] 插件订阅
  - [-] 图片美图分类上传功能 （有空传两张积累自己的图库）暂时鸽了
 
 
@@ -137,6 +138,13 @@ GocqhttpApiConfig:
 
 
 ## 更新日志
+
+
+<br>
+
+
+### 2021-9-1
+ - 增加 news 插件: 发送 60s读世界 图片
 
 
 <br>
