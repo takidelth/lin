@@ -120,6 +120,7 @@ GocqhttpApiConfig:
  - [ ] 鲁迅说 （from [HibiKier/zhenxun_bot](https://github.com/HibiKier/zhenxun_bot)）
  - [ ] pixiv 日榜
  - [ ] 插件订阅
+ - [ ] 每日签到
  - [-] 图片美图分类上传功能 （有空传两张积累自己的图库）暂时鸽了
 
 
@@ -143,8 +144,17 @@ GocqhttpApiConfig:
 <br>
 
 
+### 2021-9-2
+
+ - 修复 `news` 插件 bug
+
+<br>
+
+
 ### 2021-9-1
- - 增加 news 插件: 发送 60s读世界 图片
+
+ - 增加 `news` 插件: 发送 60s读世界 图片
+ - 增加 `requirements.txt` 文件
 
 
 <br>

@@ -1,3 +1,4 @@
+import os
 from pathlib import Path
 
 import nonebot
@@ -13,8 +14,10 @@ from lin.exceptions import ApiException
 
 
 driver = nonebot.get_driver()
-IMG_PATH = Path(".") / "lin" / "data" / "temp" / "news.jpg"
+TEMP_DIR = Path(".") / "lin" / "data" / "temp"
+IMG_PATH = TEMP_DIR / "news.jpg"
 API_URL = "https://api.iyk0.com/60s/"
+os.makedirs(TEMP_DIR, exist_ok=True)
 
 
 async def get_img_url() -> str:
