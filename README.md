@@ -1,6 +1,7 @@
 
-# <center>QQBot lin</center>
 <div align="center">
+
+# QQBot lin
 
 ![maven](https://img.shields.io/badge/python-3.8%2B-blue?logo=appveyor&style=for-the-badge)
 ![maven](https://img.shields.io/badge/nonebot-2.0.0-yellow?logo=appveyor&style=for-the-badge)
@@ -31,12 +32,46 @@
 
 <details>
 <summary>启动</summary>
-~~先这样这样然后再那样那样~~(正在更新)
+
+~~先这样这样然后再那样那样~~
+
+
+<br>
+
+
+## 1. 拉取这个仓库
+```sh
+git clone https://github.com/takidelth/lin
+```
+
+> 加速镜像: 
+
+  - `https://github.com.cnpmjs.org/takidelth/lin`
+  - `https://hub.fastgit.org/takidelth/lin`
+
+
+
+## 2. 安装环境
+
+1. 进入目录 `cd lin`
+
+2. 安装运行必须的包 `pip install -r requirements.txt`
+
+3. 运行 [go-cqhttp](https://github.com/Mrs4s/go-cqhttp)
+
+   > 务必开启 http 设置， [此项目配置说明](#配置文件说明)
+
+4. 运行 **lin** `python main.py` 或 `python3 main.py` 
+
+
+
 </details>
 
 
 <details>
 <summary>配置文件说明</summary>
+
+## 配置文件说明
 
 ```yml
 BotSelfConfig:
@@ -121,6 +156,7 @@ GocqhttpApiConfig:
  - [ ] pixiv 日榜
  - [ ] 插件订阅
  - [ ] 每日签到
+ - [ ] 自动复读 （自动打断待定）
  - [-] 图片美图分类上传功能 （有空传两张积累自己的图库）暂时鸽了
 
 

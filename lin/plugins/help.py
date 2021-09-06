@@ -30,7 +30,6 @@ async def _help_handle(bot: Bot, event: MessageEvent, state: T_State):
     msg = str(event.get_message()).strip().split(" ")
     if msg[0] == "":
         repo = (
-            # TODO 添加默认 help 帮助消息
             "迷路啦？\n"
             "这是帮助命令的调用方法:\n"
             f"{__doc__}\n"

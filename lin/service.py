@@ -135,12 +135,10 @@ class ServiceManager:
                     raise GroupIdInvalidException()
                 elif target_type == "user" and ServiceManager.Auth.auth_user(target_id):
                     raise FriendIdInvalidException()
-                # TODO 检查 id 是否存在
                 func(*args, **kwargs)
             return wapper
 
 
-        # TODO 检查 群组 和 用户 是否存在
         def auth_user(user_id: str) -> bool:
             return user_id in ServiceManager._block_list["user"]
         

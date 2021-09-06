@@ -31,9 +31,21 @@ from lin.exceptions import (
 )
 
 
+TEMP_DIR = Path(".") / "lin" / "data" / "temp" 
 PLUGIN_INFO_DIR = SERVICES_DIR
 ESSENTIAL_DIR = Path(".") / "lin" / "data" / "essential"
 os.makedirs(ESSENTIAL_DIR, exist_ok=True)
+
+
+start_card = MessageSegment.xml("""<?xml version='1.0' encoding='UTF-8' standalone='yes' ?>
+<msg serviceID="1" templateID="-1" action="web" brief="QQ Bot 已启动" sourceMsgId="0" url="" flag="0" adverSign="0" multiMsgFlag="0">
+    <item layout="2" advertiser_id="0" aid="0">
+        <picture cover="https://c2cpicdw.qpic.cn/offpic_new/1037447217//1037447217-1512954484-5BA3B82C3E4E0E3C35D794F143E788EC/0?term=3" w="0" h="0" />
+        <title size="25" color="#000000">『凌』已加入该会话</title>
+        <summary color="#000000">『凌』开始接受指令执行</summary>
+    </item>
+    <source name="QQ Bot 已启动，可以开始执行指令" icon="" action="" appid="0" />
+</msg>""")
 
 
 driver = nonebot.get_driver()
@@ -43,6 +55,8 @@ driver = nonebot.get_driver()
 async def _startup() -> None:
     # 初始化 插件管理
     sv.init()
+    # TODO 向群聊发送 xml 
+    pass
 
 
 @driver.on_shutdown
@@ -56,6 +70,16 @@ async def _shutdown() -> None:
     except:
         logger.error("插件清理失败")
         repo = "插件信息清理失败请前往 /lin/data/services/ 目录手动清理"
+        raise Exception(repo)
+
+    # 清理 data/temp 目录
+    logger.info("数据清理中...")
+    try:
+        shutil.rmtree(TEMP_DIR)
+        logger.info("数据清理完成")
+    except:
+        logger.error("数据清理失败")
+        repo = "数据清理失败请前往 /lin/data/temp/ 目录手动清理"
         raise Exception(repo)
 
     # 保存 block_list 信息
