@@ -1,6 +1,7 @@
 import os
 import json
 import shutil
+from datetime import datetime
 import nonebot
 from pathlib import Path
 from nonebot.typing import T_State
@@ -123,7 +124,13 @@ async def _request_friend_event(bot: Bot, event: FriendRequestEvent) -> None:
         data = json.loads(file.read_bytes())
     except:
         data = dict()
-    data[event.flag] = {"user_id": event.user_id, "comment": event.comment}
+    nickname = (await bot.get_stranger_info(user_id=event.user_id))["nickname"]
+    data[event.flag] = {
+        "user_id": event.user_id, 
+        "nickname": nickname,
+        "comment": event.comment,
+        "time": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    }
     
     try:
         with open(file, "w")as f:
@@ -133,7 +140,7 @@ async def _request_friend_event(bot: Bot, event: FriendRequestEvent) -> None:
 
     repo = (
         f"收到一个好友请求主人快来看下\n"
-        f"发送者: {event.user_id}\n"
+        f"发送者: {nickname}({event.user_id})\n"
         f"消息内容: {event.comment}\n"
         f"请求编号: {event.flag}"
     )
@@ -150,12 +157,17 @@ async def _request_group_event(bot: Bot, event: GroupRequestEvent) -> None:
         data = json.loads(file.read_bytes())
     except:
         data = dict()
-    sub_type = "加群" if event.sub_type == "add" else "被邀请加群" 
+    group_name = (await bot.get_group_info(group_id=event.group_id))["group_name"]
+    nickname = (await bot.get_stranger_info(user_id=event.user_id))["nickname"]
+    sub_type = "add" if event.sub_type == "add" else "invite" 
     data[event.flag] = {
         "group_id": event.group_id,
+        "group_name": group_name,
         "user_id": event.user_id,
+        "nickname": nickname,
         "comment": event.comment,
-        "sub_type": sub_type
+        "sub_type": sub_type,
+        "time": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     }
     try:
         with open(file, "w")as f:
@@ -164,8 +176,9 @@ async def _request_group_event(bot: Bot, event: GroupRequestEvent) -> None:
         raise WriteError("request_group.json write failed")
     repo = (
         f"主人收到一条{sub_type}请求 快来看看\n"
-        f"发送者: {event.user_id}\n",
-        f"目标群组: {event.group_id}\n"
+        f"发送者: {nickname}({event.user_id})\n"
+        f"目标群组: {group_name}({event.group_id})\n"
+        f"备注信息: {event.comment}\n"
         f"请求编号: {event.flag}"
     )
     await gh.send_to_superusers(repo)
@@ -229,7 +242,7 @@ group_decrease_event = sv.on_notice()
 
 @group_decrease_event.handle()
 async def _group_decrease_event(bot: Bot, event: GroupDecreaseNoticeEvent) -> None:
-    user_nike = (await bot.get_group_member_info(group_id=event.group_id, user_id=event.user_id))["nickname"]
+    user_nike = (await bot.get_stranger_info(user_id=event.user_id))["nickname"]
     await group_decrease_event.finish(f"{user_nike} 离开了")
 
 

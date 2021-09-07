@@ -14,7 +14,7 @@
 
 
 ## 简介
-一个基于 [go-cqhttp](https://github.com/Mrs4s/go-cqhttp) 和 [nonebot2](https://github.com/nonebot/nonebot2) 的 QQ 机器人, 插件以外的大部分代码都~~借鉴~~（搬运）于 [ATRI](https://github.com/Kyomotoi/ATRI) 
+一个基于 [go-cqhttp](https://github.com/Mrs4s/go-cqhttp) 和 [nonebot2](https://github.com/nonebot/nonebot2) 的 QQ 姬气人
 
 
 <br>
@@ -140,7 +140,10 @@ GocqhttpApiConfig:
 
 ### 管理员功能
 - [x] 拉黑 & 解除拉黑 （用户 | 群组） 使其不能再使用任何插件
-- [ ] 打开 & 关闭 插件  
+- [x] 打开 & 关闭 插件
+- [x] 处理入群请求
+- [ ] 处理好友请求
+- [ ] 群禁言
 
 
 </details>
@@ -185,6 +188,10 @@ GocqhttpApiConfig:
 ### 2021-9-7
 
  - 增加 **漂流瓶功能**功能
+ - 增加 **入群请求处理**功能
+ - 增加 入群请求通知 **时间** & **群昵称**
+ - 增加 好友请求通知 **时间** & **好友昵称**
+ - 修复 退群通知报错 `BUG`
 
 
 <br>
