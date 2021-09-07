@@ -1,5 +1,4 @@
 from io import BytesIO
-from PIL.Image import Image
 
 from nonebot.adapters.cqhttp import Bot
 from nonebot.adapters.cqhttp.event import Event
@@ -9,7 +8,6 @@ from nonebot.adapters.cqhttp.message import MessageSegment
 from lin.utils.image import CreateImg
 from lin.utils.api import get_qq_avatar
 from lin.service import ServiceManager as sv
-from lin.log import logger
 
 
 async def gay_generator(qqid: int) -> str:
