@@ -44,7 +44,7 @@ async def _handle_target_id(bot: Bot, event: MessageEvent, state: T_State) -> No
 async def _handle(bot: Bot, event: MessageEvent, state: T_State) -> None:
     msg = state["qq"]
     qq_id = get_id(msg)
-    sv.block_user(qq_id)
+    sv.Auth.block_user(qq_id)
     await block_user.finish(f"用户: {qq_id} 已被禁用")
     logger.info(f"qq: {qq_id}")
     
@@ -86,7 +86,7 @@ async def _handle_target_id(bot: Bot, event: MessageEvent, state: T_State) -> No
 async def _handle(bot: Bot, event: MessageEvent, state: T_State) -> None:
     msg = state["qq"]
     qq_id = get_id(msg)
-    sv.unblock_user(qq_id)
+    sv.Auth.unblock_user(qq_id)
     await unblock_user.finish(f"用户: {qq_id} 已被解除禁用")
     logger.info(f"qq: {qq_id}")
 
@@ -129,7 +129,7 @@ async def _handle_target_id(bot: Bot, event: MessageEvent, state: T_State) -> No
 async def _handle(bot: Bot, event: MessageEvent, state: T_State) -> None:
     msg = state["group_id"]
     group_id = get_id(msg)
-    sv.block_group(group_id)
+    sv.Auth.block_group(group_id)
     await block_group.finish(f"群组: {group_id} 已被禁用")
     logger.info(f"group_id: {group_id}")
 
@@ -172,6 +172,6 @@ async def _handle_target_id(bot: Bot, event: MessageEvent, state: T_State) -> No
 async def _handle(bot: Bot, event: MessageEvent, state: T_State) -> None:
     msg = state["group_id"]
     group_id = get_id(msg)
-    sv.unblock_group(group_id)
+    sv.Auth.unblock_group(group_id)
     await unblock_group.finish(f"群组: {group_id} 已被解除禁用")
     logger.info(f"group_id: {group_id}")
