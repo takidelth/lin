@@ -187,7 +187,8 @@ GocqhttpApiConfig:
 
 ### 2021-9-8
 
- - 修复 `block` 报错
+ - 修复 **block** `BUG`
+ - 修复 **签到** `BUG`
 
 
 <br>

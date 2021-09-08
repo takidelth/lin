@@ -25,10 +25,11 @@ sign = sv.on_command("签到", docs=__doc__)
 async def _sign_handle(bot: Bot, event: MessageEvent) -> None:
     user_id = str(event.user_id)
 
+    first = False
     try:
         data = sign_lst[user_id]
     except KeyError:
-        sign_lst[user_id] = {}
+        first = True
         data = {
             "count": 1,
             "level": randint(0, 3),
@@ -36,7 +37,7 @@ async def _sign_handle(bot: Bot, event: MessageEvent) -> None:
             "date": datetime.now().strftime("%Y %m %d")
         }
     
-    if data["count"] > 1:
+    if data["count"] > 1 or not first:
         if (date.today() - date(*map(int, data["date"].split(" ")))).days >= 1:
             data["count"] += 1
             level = randint(0, 3)
@@ -46,7 +47,10 @@ async def _sign_handle(bot: Bot, event: MessageEvent) -> None:
         else:
             await sign.finish("阁下今天已经签到过啦awa")
     else:
-        if sign_lst.get(user_id):
+        if (
+            sign_lst.get(user_id) and 
+            sign_lst.get(user_id)["date"] == datetime.now().strftime("%Y %m %d")
+            ):
             await sign.finish("阁下今天已经签到过啦awa")
             
     sign_lst[user_id] = data
