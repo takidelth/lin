@@ -21,14 +21,14 @@ IMG_PATH = Path(__file__).parent / "img/face"
 os.makedirs(IMG_PATH, exist_ok=True)
 
 __doc__ = """
-黑白表情包生成
+灰白表情包生成
 使用:
-    gface <表情> <底部的文字>
-
+    > gface <表情> <底部的文字>
     或者
-    
-    gface [根据提示发送图片和文字]
-    
+    > gface [根据提示发送图片和文字]
+    取消灰白效果
+    > gface off <表情> <底部的文字>
+    > gface off [根据提示发送图片和文字]
 注: [] 方括号里的内容为提示信息并非参数说明
 """ + str(MessageSegment.image(f"file://{str(IMG_PATH / 'temp.png')}"))
 
@@ -45,7 +45,7 @@ class GrayFace:
 
 
     @classmethod
-    async def drawFace(cls, im: Optional[Union[BytesIO, str]], text: str) -> str:
+    async def drawFace(cls, im: Optional[Union[BytesIO, str]], text: str, is_gray: bool = True) -> str:
         """默认存放于 ``./img/`` 目录下"""
 
         if isinstance(im, BytesIO):
@@ -56,7 +56,8 @@ class GrayFace:
         newFace = Image.new("RGB", size=bgSize, color=(0, 0, 0))
 
         # 把表情转换成灰图
-        face = face.convert("L")
+        if is_gray:
+            face = face.convert("L")
         # 添加到 newFace 
         newFace.paste(face)
 
@@ -126,6 +127,9 @@ class GrayFace:
         imgName = GrayFace.getImgFileName(msg[0])
         if imgName:
             state['img'] = imgName
+        if "off" in msg:
+            state["gray_img"] = False
+            msg.remove("off")
         if len(msg) > 1 and msg[1]:
             state['txt'] = msg[1]
         
@@ -140,7 +144,10 @@ class GrayFace:
         img, txt = state['img'], state['txt']
         imgUrl = (await bot.get_image(file=img))['url']
         imgData = BytesIO(await get_bytes(imgUrl))
-        filePath = await GrayFace.drawFace(imgData, txt)
+        if state.get("gray_img"):
+            filePath = await GrayFace.drawFace(imgData, txt)
+        else:
+            filePath = await GrayFace.drawFace(imgData, txt, False)
         if filePath.exists():
             repo = MessageSegment.image(f"file://{str(filePath)}")
         else:
