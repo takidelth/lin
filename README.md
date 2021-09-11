@@ -154,6 +154,7 @@ GocqhttpApiConfig:
 
 ## TODO
 
+ - [x] gface 灰白图必选 -> 可选
  - [ ] setu （待定...）
  - [ ] 回复指定消息撤回
  - [ ] 鲁迅说 （from [HibiKier/zhenxun_bot](https://github.com/HibiKier/zhenxun_bot)）
@@ -162,7 +163,9 @@ GocqhttpApiConfig:
  - [ ] 自动复读 （自动打断待定）
  - [ ] 点歌
  - [ ] 部分插件发送内容调整为图片
- - [x] gface 灰白图必选 -> 可选
+ - [ ] 天气查询
+ - [ ] 铭感词汇消息过滤（撤回）
+ - [ ] Epic 白嫖助手
  - [-] 图片美图分类上传功能 （有空传两张积累自己的图库）暂时鸽了
 
 
