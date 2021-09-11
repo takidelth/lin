@@ -1,5 +1,5 @@
 from nonebot.adapters.cqhttp import Bot
-from nonebot.adapters.cqhttp.event import GroupMessageEvent, MessageEvent
+from nonebot.adapters.cqhttp.event import GroupMessageEvent
 from nonebot.permission import SUPERUSER
 
 from lin.service import ServiceManager as sv
@@ -30,6 +30,7 @@ async def _handle_group_ban(bot: Bot, event: GroupMessageEvent) -> None:
                     user_id=int(target_id),
                     duration=time
                 )
+    await group_ban.finish("操作成功")
 
 
 __doc__ = """
@@ -51,6 +52,7 @@ async def _handle_group_disban(bot: Bot, event: GroupMessageEvent) -> None:
                     user_id=int(target_id),
                     duration=0
                 )
+    await group_disban.finish("操作成功")
 
 
 __doc__ = """
@@ -60,7 +62,7 @@ group_ban_all = sv.on_command("全体禁言", docs=__doc__, permission=SUPERUSER
 
 
 @group_ban_all.handle()
-async def _handle_group_ban_all(bot: Bot, event: MessageEvent) -> None:
+async def _handle_group_ban_all(bot: Bot, event: GroupMessageEvent) -> None:
     # 完全没有考虑 主人不是管理员的情况（doge保命
     msg = str(event.message).strip()
     
@@ -72,10 +74,4 @@ async def _handle_group_ban_all(bot: Bot, event: MessageEvent) -> None:
                             group_id=event.group_id,
                             enable=enable
                         )
-    # bot.set_group_admin
-    # bot.set_group_card
-    # bot.set_group_kick
-    # bot.set_group_name
-    # bot.set_group_leave
-    # bot.set_group_special_title
-    # bot.set_group_leave
+    await group_ban_all.finish("操作成功")

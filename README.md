@@ -119,7 +119,8 @@ GocqhttpApiConfig:
 - [x] 获取帮助
 - [x] 检查服务器状态
 - [x] 一言 (hitokoto)
-- [x] 黑白图片生成
+- [x] 黑白图片生成 （gface）
+- [x] gface 灰白图必选 -> 可选
 - [x] 废物证生成 [trashCard](https://github.com/djkcyl/trashCard)
 - [x] ph_generator 风格图片 生成 (搬运自群友的插件)
 - [x] 加群通知
@@ -142,8 +143,10 @@ GocqhttpApiConfig:
 - [x] 拉黑 & 解除拉黑 （用户 | 群组） 使其不能再使用任何插件
 - [x] 打开 & 关闭 插件
 - [x] 处理入群请求
-- [ ] 处理好友请求
-- [ ] 群禁言
+- [x] 处理好友请求
+- [x] 群禁言 (单人|全体)
+- [x] 设置管理员
+- [x] 群组踢人
 
 
 </details>
@@ -154,7 +157,6 @@ GocqhttpApiConfig:
 
 ## TODO
 
- - [x] gface 灰白图必选 -> 可选
  - [ ] setu （待定...）
  - [ ] 回复指定消息撤回
  - [ ] 鲁迅说 （from [HibiKier/zhenxun_bot](https://github.com/HibiKier/zhenxun_bot)）
@@ -166,6 +168,7 @@ GocqhttpApiConfig:
  - [ ] 天气查询
  - [ ] 铭感词汇消息过滤（撤回）
  - [ ] Epic 白嫖助手
+ - [ ] 积分可用于自助设置群头衔
  - [-] 图片美图分类上传功能 （有空传两张积累自己的图库）暂时鸽了
 
 
@@ -184,6 +187,17 @@ GocqhttpApiConfig:
 
 
 ## 更新日志
+
+
+<br>
+
+
+### 2021-9-11
+
+ - 增加 **群禁言**
+ - 增加 **设置管理员**
+ - 增加 **群组踢人**
+ - 增加 **好友请求处理**
 
 
 <br>
