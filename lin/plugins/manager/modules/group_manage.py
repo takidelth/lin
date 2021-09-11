@@ -1,4 +1,4 @@
-from nonebot.adapters.cqhttp import Bot, permission
+from nonebot.adapters.cqhttp import Bot
 from nonebot.adapters.cqhttp.event import GroupMessageEvent
 from nonebot.permission import SUPERUSER
 

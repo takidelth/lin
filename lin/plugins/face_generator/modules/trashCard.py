@@ -168,7 +168,7 @@ class TrashCard:
             await TrashCard.trashCard.finish("呐, 这是阁下新的废物证， 好好保存哦")
         elif TrashCard.cardIsExists(qqid):
             await TrashCard.sendCard(qqid)
-            await TrashCard.trashCard.reject("阁下已经有一张了， 如果想要重新生成可以回复 '换新'")
+            await TrashCard.trashCard.finish("阁下已经有一张了， 如果想要重新生成可以回复 '废物证 换新'")
         elif (not TrashCard.cardIsExists(qqid)) and "换新" in msg:
             await TrashCard.trashCard.reject("阁下暂时还没有废物证，回复 '是' 凌可以为你生成一张哦")
         else:
