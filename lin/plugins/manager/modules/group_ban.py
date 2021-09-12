@@ -67,7 +67,7 @@ async def _handle_group_ban_all(bot: Bot, event: GroupMessageEvent) -> None:
     msg = str(event.message).strip()
     
     enable = True
-    if "解除" in enable:
+    if "解除" in msg:
         enable = False
 
     await bot.set_group_whole_ban(

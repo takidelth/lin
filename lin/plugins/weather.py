@@ -4,6 +4,7 @@ import jieba.posseg as pseg
 
 from nonebot.adapters.cqhttp import Bot
 from nonebot.adapters.cqhttp.event import MessageEvent
+from nonebot.rule import endswith
 from nonebot.typing import T_State
 
 from lin.service import ServiceManager as sv
@@ -56,7 +57,7 @@ async def _handle_weather(bot: Bot, event: MessageEvent, state: T_State) -> None
     if not cite:
         return
     
-    state["cite"] = cite
+    state["cite"] = cite if cite.endswith("市") else cite + "市"
 
 
 @weather.got("cite", prompt="是哪个城市呢?")
@@ -79,7 +80,8 @@ async def _handle_weather_r(bot: Bot, event: MessageEvent, state: T_State) -> No
     cite = get_cite(msg)
     if not cite:
         return
-    
+    cite = cite if cite.endswith("市") else cite + "市"
+
     yesterday = await get_weather(cite)
     repo = (
         f"今天{cite}天气 {yesterday['type']} {yesterday['fx']}\n"
