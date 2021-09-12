@@ -46,7 +46,10 @@ __doc__ = """
     或者消息中包含城市名称和关键字[天气]的消息
 """
 weather = sv.on_command(
-    "天气", aliases={"查询天气", "天气查询", "今天天气"}, docs=__doc__
+    "天气", 
+    aliases={"查询天气", "天气查询", "今天天气"}, 
+    docs=__doc__,
+    priority=10
 )
 
 
@@ -71,7 +74,10 @@ async def _get_weather(bot: Bot, event: MessageEvent, state: T_State) -> None:
     await weather.finish(repo)
 
 
-weather_r = sv.on_regex(".*天气.*")
+weather_r = sv.on_regex(
+    ".*天气.*",
+    priority=1
+)
 
 
 @weather_r.handle()
