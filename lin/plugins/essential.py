@@ -243,7 +243,7 @@ group_decrease_event = sv.on_notice()
 @group_decrease_event.handle()
 async def _group_decrease_event(bot: Bot, event: GroupDecreaseNoticeEvent) -> None:
     user_nike = (await bot.get_stranger_info(user_id=event.user_id))["nickname"]
-    await group_decrease_event.finish(f"{user_nike} 离开了")
+    await group_decrease_event.finish(f"{user_nike} 离开了，请带好您的包")
 
 
 group_increase_event = sv.on_notice()
