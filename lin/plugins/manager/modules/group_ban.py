@@ -1,6 +1,7 @@
 from nonebot.adapters.cqhttp import Bot
 from nonebot.adapters.cqhttp.event import GroupMessageEvent
 from nonebot.permission import SUPERUSER
+from nonebot.adapters.cqhttp.exception import ActionFailed
 
 from lin.service import ServiceManager as sv
 
@@ -25,12 +26,16 @@ async def _handle_group_ban(bot: Bot, event: GroupMessageEvent) -> None:
     if time == 0:
         await group_ban.finish("无效的时间")
 
-    await bot.set_group_ban(
-                    group_id=event.group_id,
-                    user_id=int(target_id),
-                    duration=time
-                )
-    await group_ban.finish("操作成功")
+    try:
+        await bot.set_group_ban(
+                        group_id=event.group_id,
+                        user_id=int(target_id),
+                        duration=time
+                    )
+    except ActionFailed:
+        await group_ban.finish("权限不足")
+    else:
+        await group_ban.finish("操作成功")
 
 
 __doc__ = """
@@ -47,12 +52,16 @@ async def _handle_group_disban(bot: Bot, event: GroupMessageEvent) -> None:
     if target_id == "":
         await group_disban.finish("阁下要解除谁先说清楚鸭")
 
-    await bot.set_group_ban(
-                    group_id=event.group_id,
-                    user_id=int(target_id),
-                    duration=0
-                )
-    await group_disban.finish("操作成功")
+    try:    
+        await bot.set_group_ban(
+                        group_id=event.group_id,
+                        user_id=int(target_id),
+                        duration=0
+                    )
+    except ActionFailed:
+        await group_disban.finish("权限不足")
+    else:
+        await group_disban.finish("操作成功")
 
 
 __doc__ = """
@@ -69,9 +78,13 @@ async def _handle_group_ban_all(bot: Bot, event: GroupMessageEvent) -> None:
     enable = True
     if "解除" in msg:
         enable = False
-
-    await bot.set_group_whole_ban(
-                            group_id=event.group_id,
-                            enable=enable
-                        )
-    await group_ban_all.finish("操作成功")
+    
+    try:
+        await bot.set_group_whole_ban(
+                                group_id=event.group_id,
+                                enable=enable
+                            )
+    except ActionFailed:
+        await group_ban_all.finish("权限不足")
+    else:
+        await group_ban_all.finish("操作成功")

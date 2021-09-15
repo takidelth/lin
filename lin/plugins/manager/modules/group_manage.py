@@ -1,6 +1,7 @@
 from nonebot.adapters.cqhttp import Bot
 from nonebot.adapters.cqhttp.event import GroupMessageEvent
 from nonebot.permission import SUPERUSER
+from nonebot.adapters.cqhttp.exception import ActionFailed
 
 from lin.service import ServiceManager as sv
 
@@ -26,12 +27,16 @@ async def _handle_set_group_admin(bot: Bot, event: GroupMessageEvent) -> None:
         enable = False
 
     target_id = int(target_id)
-    await bot.set_group_admin(
-                        group_id=event.group_id,
-                        user_id=target_id,
-                        enable=enable
-                    )
-    await set_group_admin.finish("操作成功")
+    try:
+        await bot.set_group_admin(
+                            group_id=event.group_id,
+                            user_id=target_id,
+                            enable=enable
+                        )
+    except ActionFailed:
+        await set_group_admin.finish("权限不足")
+    else:
+        await set_group_admin.finish("操作成功")
 
 
 __doc__ = """
@@ -52,12 +57,16 @@ async def _handle_group_kick(bot: Bot, event: GroupMessageEvent) -> None:
 
     target_id = int(target_id)
 
-    await bot.set_group_kick(
-                        group_id=event.group_id,
-                        user_id=target_id,
-                        reject_add_request=True     # 拒绝此人的请求
-                    )
-    await group_kick.finish("操作成功")
+    try:
+        await bot.set_group_kick(
+                            group_id=event.group_id,
+                            user_id=target_id,
+                            reject_add_request=True     # 拒绝此人的请求
+                        )
+    except ActionFailed:
+        await group_kick.finish("权限不足")
+    else:
+        await group_kick.finish("操作成功")
 
 
     # bot.set_group_card
