@@ -252,5 +252,5 @@ group_increase_event = sv.on_notice()
 @group_increase_event.handle()
 async def _group_increase_event(bot: Bot, event: GroupIncreaseNoticeEvent) -> None:
     # TODO 暂时不考虑欢迎消息追加 头像
-    repo = "欢迎新人 " + MessageSegment.at(event.user_id)
+    repo = "欢迎您的到来" + MessageSegment.at(event.user_id) + "请随便找个座位坐下吧~"
     await group_increase_event.finish(repo)

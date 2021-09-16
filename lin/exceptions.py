@@ -4,10 +4,11 @@ import string
 from pathlib import Path
 from typing import Optional
 from datetime import datetime
-from random import randint
+from random import choice
 from random import sample
 from datetime import datetime
 from traceback import format_exc
+from nonebot.exception import ActionFailed
 
 from nonebot.message import run_postprocessor
 from nonebot.matcher import Matcher
@@ -94,6 +95,9 @@ async def _track_error(
     except BaseBotException as e:
         prompt = e.prompt or e.__class__.__name__
         track_id = e.track_id
+    except ActionFailed as e:
+        prompt = "可能被风控\nActionFailed"
+        track_id = -1
     except Exception as e:
         prompt = "Unknown ERROR->" + e.__class__.__name__
         track_id = _save_error(prompt, format_exc())
@@ -105,18 +109,18 @@ async def _track_error(
         "哎呀...主人的屎山又出交通事故了哦，赶紧去修复吧（嘲笑",
         "阿哲， 你写的什么屎山啊事故率真高"
     ]
-    hitokoto = notice_msg[randint(0, len(notice_msg) - 1)]
-    repo = (
-        f"{hitokoto}\n"
+    notice = choice(notice_msg)
+    info = (
+        f"{notice}\n"
         f"追踪ID: {track_id}\n"
-        f"报错原因: {prompt}\n"
+        f"报错原因: {prompt} \n"
     )
-    await bot.send_private_msg(user_id=1037447217, message=repo)
-    msg = (
-        "[WARNING]发生了意料之外的错误 >_<\n"
-        "不用担心，我已经通知主人啦\n"
-        f"追踪ID: {track_id}\n"
-        f"报错原因: {prompt}\n"
-        f"请耐心等待主人修复"
-    )
+    await bot.send_private_msg(user_id=1037447217, message=info)
+    if track_id != -1:
+        msg = (
+            "[WARNING]发生了意料之外的错误 >_<\n"
+            "不用担心，我已经通知主人啦\n"
+        )
+    else:
+        msg = "[WARNING]账号可能被风控"
     await bot.send(event, msg)
