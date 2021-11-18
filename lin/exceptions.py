@@ -16,6 +16,7 @@ from nonebot.adapters.cqhttp import Bot, Event
 from nonebot.typing import T_State
 
 from lin.log import logger
+from lin.service import GocqhttpApiServer as ghs
 
 ERROR_DIR = Path(".") / "lin" / "data" / "errors"
 os.makedirs(ERROR_DIR, exist_ok=True)
@@ -115,12 +116,13 @@ async def _track_error(
         f"追踪ID: {track_id}\n"
         f"报错原因: {prompt} \n"
     )
-    await bot.send_private_msg(user_id=1037447217, message=info)
-    if track_id != -1:
-        msg = (
-            "[WARNING]发生了意料之外的错误 >_<\n"
-            "不用担心，我已经通知主人啦\n"
-        )
-    else:
-        msg = "[WARNING]账号可能被风控"
-    await bot.send(event, msg)
+    await ghs.send_to_superusers(info)
+    # await bot.send_private_msg(user_id=, message=info)
+    # if track_id != -1:
+    #     msg = (
+    #         "[WARNING]发生了意料之外的错误 >_<\n"
+    #         "不用担心，我已经通知主人啦\n"
+    #     )
+    # else:
+    #     msg = "[WARNING]账号可能被风控"
+    # await bot.send(event, msg)
