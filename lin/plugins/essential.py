@@ -199,7 +199,7 @@ async def _group_recall_event(bot: Bot, event: GroupRecallNoticeEvent) -> None:
         f"message_id: {msg_id}\n"
         f"time: {msg['time']}:\n"
         f"from: {group_name}({event.group_id}) --> {user_nike}({event.user_id})\n"
-        f"msg：{msg['raw_message']}"
+        f"msg：{msg.get('message')}"
     )
     await gh.send_to_superusers(repo)
 
