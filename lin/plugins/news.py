@@ -42,7 +42,6 @@ async def update_img() -> None:
         return
     data = await get_bytes(img_url)
     IMG_PATH.write_bytes(data)
-    await gh.send_to_superusers(message="news 插件的图片已经预先缓存到本地了哦")
 
 
 @driver.on_startup
