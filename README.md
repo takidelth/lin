@@ -187,6 +187,8 @@ GocqhttpApiConfig:
  - [Kyomotoi/ATRI](https://github.com/Kyomotoi/ATRI)
  - [djkcyl/trashCard](https://github.com/djkcyl/trashCard)
  - [HibiKier/zhenxun_bot](https://github.com/HibiKier/zhenxun_bot)
+ - [Quan666/ELFChatBot](https://github.com/Quan666/ELFChatBot)
+ - [monsterxcn/nonebot_plugin_epicfree](https://github.com/monsterxcn/nonebot_plugin_epicfree)
 
 
 <br>
@@ -342,3 +344,20 @@ GocqhttpApiConfig:
 
 
 <br>
+
+
+### 2021-11-24
+
+ - 增加 闲聊功能 (from: https://github.com/Quan666/ELFChatBot)
+ - 修改 `news` 插件：更新缓存发送消息 <font color="green">-></font> <font color="yellow">不发送</font>
+
+
+<br>
+
+
+### 2021-12-7
+
+ - 增加 `epic` 免费游戏提醒 (fron: https://github.com/monsterxcn/nonebot_plugin_epicfree)
+ - 修复 `exceptions.py` 报错群发管理员功能
+ - 修改 `config.py` 配置文件
+ - 发现 项目过于拉跨准备重构
